@@ -36,14 +36,15 @@ cd /path/to/NR-travel-webapp
 ### 2. Install Dependencies
 
 ```bash
-# Install backend dependencies
-cd backend
-npm install
-cd ..
+# Recommended: use the deploy script (installs deps, configures .env, starts Docker)
+./deploy.sh --env docker --url http://localhost:8090
+```
 
-# Install frontend dependencies
-cd frontend
-npm install
+If you prefer manual install:
+
+```bash
+cd backend && npm install
+cd ../frontend && npm install
 cd ..
 ```
 
@@ -57,41 +58,40 @@ cp .env.example .env
 
 Review `.env.example` for all available configuration options, then edit `.env` with your local development settings.
 
-**Example values for local Docker development**:
+**Recommended for Docker Compose (local)**:
 ```env
 NODE_ENV=development
+JWT_SECRET=your_dev_jwt_secret_here
+REFRESH_SECRET=your_dev_refresh_secret_here
 POSTGRES_USER=travel
 POSTGRES_PASSWORD=your_dev_db_password_here
 POSTGRES_DB=travel
-JWT_SECRET=your_dev_jwt_secret_here
-REFRESH_SECRET=your_dev_refresh_secret_here
+CLIENT_URL=http://localhost:8090
+API_URL=http://localhost:8090
+VITE_API_URL=/api
+NGINX_PORT=8090
+SERVER_NAME=localhost
 ```
 
 For a complete list of available variables, see `.env.example` in the repository root.
 
+Tip: `./setup-config.sh docker` will generate the Docker-friendly URLs above.
+
+### How `.env` Affects Docker + Nginx
+
+- `.env` controls the backend URLs, database credentials, and frontend API base URL used at build/runtime.
+- `nginx.conf` is static. The host port mapping is defined in `docker-compose.yml` (`8090:80`).
+- If you want ports/server_name to be fully `.env`-driven, we should update `docker-compose.yml` to use variables and optionally template `nginx.conf`. I can wire this up if you want.
+
 ### 4. Database Setup
 
-#### Option A: Using Docker (Recommended)
+#### Option A: Docker Compose (Recommended)
 
 ```bash
-# Start PostgreSQL container
-docker run -d \
-  --name travel-app-db \
-  -e POSTGRES_DB=travel_app_dev \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 \
-  postgres:15-alpine
-
-# Verify connection
-psql -h localhost -U postgres -d travel_app_dev -c "SELECT 1;"
+docker compose up -d
 ```
 
-To stop the database:
-```bash
-docker stop travel-app-db
-docker rm travel-app-db
-```
+This starts Postgres with the credentials from `.env` and the app containers.
 
 #### Option B: Using Homebrew
 
@@ -102,20 +102,18 @@ brew install postgresql
 # Start PostgreSQL service
 brew services start postgresql
 
-# Create database
-createdb travel_app_dev
+# Create database (match POSTGRES_DB in .env)
+createdb travel
 
 # Verify connection
-psql -d travel_app_dev -c "SELECT 1;"
+psql -d travel -c "SELECT 1;"
 ```
+
+If you use local Postgres, set `POSTGRES_HOST=localhost` in `.env`.
 
 ### 5. Run Database Migrations
 
-```bash
-cd backend
-npm run migrate  # or appropriate migration command
-cd ..
-```
+The backend initializes its schema automatically on startup. No manual migration command is required.
 
 ## Running the Application
 
@@ -126,7 +124,7 @@ cd ..
 ```bash
 cd backend
 npm run dev
-# Backend should start on http://localhost:5000
+# Backend should start on http://localhost:4000
 ```
 
 #### Terminal 2: Start Frontend
@@ -138,25 +136,29 @@ npm run dev
 # Check console output for exact port
 ```
 
-#### Terminal 3 (Optional): Watch Mode
+#### Terminal 3 (Optional)
 
-```bash
-# If separate build/watch process is needed
-cd backend
-npm run watch
-```
+No extra watch process is required; `npm run dev` covers backend hot-reload.
 
 ### Using Docker Compose (All Services)
 
 ```bash
 # Start all services (backend, frontend, database)
-docker-compose up
+docker compose up
 
 # Stop services
-docker-compose down
+docker compose down
 
 # Rebuild after code changes
-docker-compose up --build
+docker compose up --build
+```
+
+For a new machine or server, set `NGINX_PORT` and `SERVER_NAME` in `.env` to control the public port and hostname used by Nginx.
+
+### One-Step Bootstrap (Local or Server)
+
+```bash
+./deploy.sh --env docker --url http://localhost:8090
 ```
 
 ## Development Workflow
@@ -181,9 +183,8 @@ docker-compose up --build
 cd backend
 npm test
 
-# Frontend tests
-cd frontend
-npm test
+# Frontend tests (not configured in this project)
+# cd frontend && npm test
 ```
 
 ## Troubleshooting
@@ -193,8 +194,9 @@ npm test
 See which process is using the port:
 ```bash
 # macOS
-lsof -i :5000  # for backend
-lsof -i :3000  # for frontend
+lsof -i :4000  # backend
+lsof -i :5173  # frontend (Vite)
+lsof -i :8090  # nginx (Docker)
 ```
 
 Kill the process:
@@ -231,31 +233,34 @@ Docker Desktop might have memory/CPU limits:
 3. Increase Memory to at least 4GB
 4. Increase CPU cores to at least 2
 
+### 502 Bad Gateway (Docker)
+
+If you rebuilt containers and see 502s, Nginx may still be pointing at old container IPs. Restart it:
+
+```bash
+docker compose restart nginx
+```
+
 ## Common Commands
 
 ```bash
-# Start everything
-npm run dev  # from project root (if configured)
-
-# Run specific services
+# Start backend / frontend
 cd backend && npm run dev
 cd frontend && npm run dev
 
-# Format code
-npm run format
-
 # Lint
-npm run lint
+cd backend && npm run lint
 
-# Build for production
-npm run build
+# Build
+cd backend && npm run build
+cd frontend && npm run build
 
 # Create git branch
 git checkout -b feature/branch-name
 
 # View logs
-docker-compose logs -f backend
-docker-compose logs -f frontend
+docker compose logs -f backend
+docker compose logs -f frontend
 ```
 
 ## File Structure
@@ -282,17 +287,17 @@ docker-compose logs -f frontend
 
 ```bash
 # Using Homebrew
-psql -d travel_app_dev
+psql -d travel
 
-# Using Docker
-docker exec -it travel-app-db psql -U postgres -d travel_app_dev
+# Using Docker Compose
+docker compose exec postgres psql -U travel -d travel
 ```
 
 ### Run SQL Scripts
 
 ```bash
 # From bash
-psql -d travel_app_dev -f scripts/your-script.sql
+psql -d travel -f scripts/your-script.sql
 
 # Or inside psql console
 \i scripts/your-script.sql

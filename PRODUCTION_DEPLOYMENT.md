@@ -136,11 +136,11 @@ Create [CHANGELOG.md](./CHANGELOG.md) entry:
 
 ```bash
 # Rebuild everything
-./install.sh
+./deploy.sh --env production --url https://yourdomain.com
 
 # Test in Docker (production mode)
-./setup-config.sh docker
-docker compose down -v
+./setup-config.sh production https://yourdomain.com
+docker compose down
 docker compose up -d --build
 
 # Test critical flows:
@@ -183,7 +183,7 @@ git push origin release/1.0.0
    ### Deployment Steps
    1. Merge this PR
    2. Pull latest main branch
-   3. Run: `./install.sh && docker compose up -d --build`
+3. Run: `./deploy.sh --env production --url https://yourdomain.com`
    4. Verify at: https://travel.yourdomain.com
    ```
 
@@ -245,15 +245,11 @@ cd /app/travel
 git checkout main
 git pull origin main
 
-# Install dependencies
-./install.sh
+# Install + configure + deploy
+./deploy.sh --env production --url https://travel.yourdomain.com
 
-# Configure for production
-./setup-config.sh production
-nano .env  # Verify production settings
-
-# Rebuild and deploy
-docker compose -f docker-compose.yml up -d --build
+# Review production settings if needed
+nano .env
 
 # Verify deployment
 curl https://travel.yourdomain.com
