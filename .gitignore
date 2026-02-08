@@ -46,6 +46,14 @@ Thumbs.db
 /tmp
 *.tmp
 
+# Local deployment guides (personal paths)
+QUICK_DEPLOY_TODAY.md
+
+# Database backups (server-specific)
+backup_*.sql
+/backups/*
+!backups/.gitkeep
+
 # IDE specific
 .project
 .classpath
