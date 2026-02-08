@@ -50,15 +50,17 @@ CREATE TABLE system_settings (
 
 ## Environment Variables
 
-The database connection uses these environment variables (with defaults):
+The database connection is configured via `.env` file. Key variables:
 
-- `POSTGRES_HOST` (default: 'postgres')
+- `POSTGRES_HOST` (default: 'postgres' in Docker)
 - `POSTGRES_PORT` (default: 5432)
-- `POSTGRES_USER` (default: 'travel')
-- `POSTGRES_PASSWORD` (default: 'travel')
-- `POSTGRES_DB` (default: 'travel')
+- `POSTGRES_USER` - Set in your `.env` file
+- `POSTGRES_PASSWORD` - Set in your `.env` file  
+- `POSTGRES_DB` - Set in your `.env` file
 
-These match the docker-compose.yml configuration.
+**⚠️ IMPORTANT**: Never commit your `.env` file. Copy from `.env.example` and configure locally.
+
+For all available environment variables, see `.env.example` in the repository root.
 
 ## Email Configuration
 

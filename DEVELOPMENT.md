@@ -55,29 +55,19 @@ Copy the example environment file and configure it:
 cp .env.example .env
 ```
 
-Edit `.env` with your local development settings:
+Review `.env.example` for all available configuration options, then edit `.env` with your local development settings.
 
+**Example values for local Docker development**:
 ```env
-# Database (if using Docker)
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=travel_app_dev
-DB_USER=postgres
-DB_PASSWORD=postgres
-
-# Backend
-BACKEND_PORT=5000
 NODE_ENV=development
-
-# Frontend
-FRONTEND_PORT=3000
-
-# LDAP (if available locally)
-LDAP_ENABLED=false
-
-# Email (optional for dev)
-SMTP_ENABLED=false
+POSTGRES_USER=travel
+POSTGRES_PASSWORD=your_dev_db_password_here
+POSTGRES_DB=travel
+JWT_SECRET=your_dev_jwt_secret_here
+REFRESH_SECRET=your_dev_refresh_secret_here
 ```
+
+For a complete list of available variables, see `.env.example` in the repository root.
 
 ### 4. Database Setup
 
