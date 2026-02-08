@@ -5,6 +5,8 @@
 #   ./deploy.sh --env production --url https://yourdomain.com
 #   ./deploy.sh --env docker --url http://localhost:8090
 #   ./deploy.sh --env production --url https://yourdomain.com --pull --branch main --down
+#   ./deploy.sh --env docker --url http://localhost:8090 --reset-db
+#   ./deploy.sh --env production --url https://yourdomain.com --no-prompt
 
 set -euo pipefail
 
@@ -12,16 +14,20 @@ ENVIRONMENT="production"
 BASE_URL=""
 DO_PULL="false"
 DO_DOWN="false"
+RESET_DB="false"
+NO_PROMPT="false"
 BRANCH="main"
 
 usage() {
   echo "Usage: ./deploy.sh [--env <development|docker|production>] [--url <base_url>]"
-  echo "                 [--pull] [--branch <name>] [--down]"
+  echo "                 [--pull] [--branch <name>] [--down] [--reset-db] [--no-prompt]"
   echo ""
   echo "Examples:"
   echo "  ./deploy.sh --env production --url https://travel.yourdomain.com"
   echo "  ./deploy.sh --env docker --url http://localhost:8090"
   echo "  ./deploy.sh --env production --url https://travel.yourdomain.com --pull --branch main --down"
+  echo "  ./deploy.sh --env docker --url http://localhost:8090 --reset-db"
+  echo "  ./deploy.sh --env production --url https://travel.yourdomain.com --no-prompt"
 }
 
 while [ $# -gt 0 ]; do
@@ -44,6 +50,14 @@ while [ $# -gt 0 ]; do
       ;;
     --down)
       DO_DOWN="true"
+      shift 1
+      ;;
+    --reset-db)
+      RESET_DB="true"
+      shift 1
+      ;;
+    --no-prompt)
+      NO_PROMPT="true"
       shift 1
       ;;
     -h|--help)
@@ -128,12 +142,81 @@ else
   ./setup-config.sh "$ENVIRONMENT"
 fi
 
+get_env_value() {
+  local key="$1"
+  local value=""
+  if [ -f .env ]; then
+    value=$(grep -E "^${key}=" .env | tail -n 1 | cut -d '=' -f2-)
+  fi
+  echo "$value"
+}
+
+set_env_value() {
+  local key="$1"
+  local value="$2"
+  if grep -qE "^${key}=" .env; then
+    sed -i '' "s#^${key}=.*#${key}=${value}#g" .env
+  else
+    echo "${key}=${value}" >> .env
+  fi
+}
+
+is_placeholder() {
+  local value="$1"
+  case "$value" in
+    ""|change-me*|your_*|REDACTED)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+generate_secret() {
+  node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+}
+
+JWT_SECRET_CURRENT=$(get_env_value JWT_SECRET)
+REFRESH_SECRET_CURRENT=$(get_env_value REFRESH_SECRET)
+POSTGRES_PASSWORD_CURRENT=$(get_env_value POSTGRES_PASSWORD)
+
+# Auto-generate secrets if missing/placeholder
+if is_placeholder "$JWT_SECRET_CURRENT"; then
+  NEW_JWT_SECRET=$(generate_secret)
+  set_env_value JWT_SECRET "$NEW_JWT_SECRET"
+fi
+
+if is_placeholder "$REFRESH_SECRET_CURRENT"; then
+  NEW_REFRESH_SECRET=$(generate_secret)
+  set_env_value REFRESH_SECRET "$NEW_REFRESH_SECRET"
+fi
+
+if is_placeholder "$POSTGRES_PASSWORD_CURRENT"; then
+  GENERATED_DB_PASSWORD=$(generate_secret)
+  set_env_value POSTGRES_PASSWORD "$GENERATED_DB_PASSWORD"
+  echo "🔐 Generated POSTGRES_PASSWORD (stored in .env)."
+  echo "    Save this value now: $GENERATED_DB_PASSWORD"
+fi
+
+if [ "$NO_PROMPT" != "true" ]; then
+  read -r -p "Enter POSTGRES_PASSWORD to override (leave blank to keep current): " POSTGRES_PASSWORD_INPUT
+  if [ -n "$POSTGRES_PASSWORD_INPUT" ]; then
+    set_env_value POSTGRES_PASSWORD "$POSTGRES_PASSWORD_INPUT"
+  fi
+fi
+
 echo ""
 echo "🔒 IMPORTANT: review .env for secrets (JWT_SECRET, REFRESH_SECRET, SMTP, DB password)."
 echo ""
 
 if [ "$DO_DOWN" = "true" ]; then
   docker compose down
+fi
+
+if [ "$RESET_DB" = "true" ]; then
+  echo "⚠️  Resetting database volume (destructive)..."
+  docker compose down -v
 fi
 
 docker compose up -d --build
