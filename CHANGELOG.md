@@ -7,69 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
-
-Changes that are in development but not yet released.
-
-### Added
-- New features in development
-
-### Changed
-- Changes to existing functionality
-
-### Fixed
-- Bug fixes for unreleased features
-
-### Deprecated
-- Features that will be removed in a future version
-
-### Removed
-- Features that were removed
-
-### Security
-- Security improvements and vulnerability patches
-
----
-
 ## [1.0.0] - 2026-02-08
 
 ### Added
-- Initial release of NR Travel Webapp
-- User authentication and role-based access control (RBAC)
-- Application submission workflow
-- Admin dashboard and management interface
-- Reviewer dashboard for application review
-- Email notification system
-- Department management
-- User management
-- Application status tracking
+- Initial production release
+- User authentication with email/LDAP
+- Application workflow and management
+- Admin control panel
+- Reviewer dashboard
+- Minister dashboard
 - File attachment support
-- Settings management
-- Docker containerization
-- PostgreSQL database
-- Redis caching
-- Comprehensive logging
-
-### Changed
-- N/A (Initial release)
 
 ### Fixed
-- N/A (Initial release)
-
-### Deprecated
-- N/A
-
-### Removed
-- N/A
+- API route double-proxy bug (VITE_API_URL)
 
 ### Security
-- Implemented JWT authentication
-- Password hashing with Argon2
-- CORS protection
-- Input validation
-- SQL injection prevention
-- Rate limiting
-
+- JWT token authentication
+- Password hashing with bcrypt
 ---
 
 ## [0.1.0] - 2026-01-15
