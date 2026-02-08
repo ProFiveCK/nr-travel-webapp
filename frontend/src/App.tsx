@@ -288,7 +288,11 @@ const App = () => {
   }
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="relative p-4 md:p-8 min-h-screen">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-200/30 blur-3xl" />
+        <div className="absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-amber-200/30 blur-3xl" />
+      </div>
       {sessionRestoring && (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
@@ -322,16 +326,20 @@ const App = () => {
         />
       )}
       {!sessionRestoring && user && (
-        <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden">
-          <header className="p-6 bg-blue-700 flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-white">Nauru Travel Application</h1>
+        <div className="relative max-w-7xl mx-auto app-shell rounded-2xl overflow-hidden reveal">
+          <header className="app-header p-6 sm:p-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-emerald-200 font-semibold">Nauru Government</p>
+              <h1 className="text-3xl sm:text-4xl font-display text-white">Nauru Travel Application</h1>
+              <p className="text-sm text-emerald-100/90 mt-2">Review, approve, and track travel in one workspace.</p>
+            </div>
             {user && (
               <div className="flex items-center gap-4 text-white">
                 <span>
                   {user.firstName} {user.lastName}
                 </span>
                 <button
-                  className="px-3 py-1.5 rounded-lg bg-rose-500"
+                  className="btn btn-danger btn-sm"
                   onClick={() => {
                     localStorage.removeItem('authTokens');
                     setTokens(null);
@@ -366,7 +374,7 @@ const App = () => {
                 }, 100);
               }
             }} />
-          <main className="p-6 md:p-10 bg-slate-50">
+          <main className="p-6 md:p-10 bg-white/70">
             {active === 'application' && (
               <ApplicationForm
                 applications={applications}

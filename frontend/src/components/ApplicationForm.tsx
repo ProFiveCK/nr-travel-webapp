@@ -11,7 +11,7 @@ interface Props {
 }
 
 const documentChecklist = [
-  'Invitation from event organizer',
+  'Invitation from event organiser',
   'Travel cost quotation (least cost flights)',
   'Justification for unfunded participants',
   'Explanation when latest flights are not used',
@@ -392,10 +392,10 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 reveal-stagger">
       <form onSubmit={(e) => { e.preventDefault(); handleSubmitForReview(); }} className="space-y-8">
         {/* Applicant Information & Contact - Moved to Top */}
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm">
+        <section className="p-6 rounded-xl app-panel">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Applicant Information & Contact</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="text-sm font-medium text-slate-700">
@@ -494,7 +494,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
           </div>
         </section>
 
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm">
+        <section className="p-6 rounded-xl app-panel">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Identification of Spending Unit</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="text-sm font-medium text-slate-700">
@@ -585,7 +585,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
           </div>
         </section>
 
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm space-y-4">
+        <section className="p-6 rounded-xl app-panel space-y-4">
           <h3 className="text-lg font-semibold text-slate-900">Event Details</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="text-sm font-medium text-slate-700">
@@ -637,7 +637,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
           </div>
         </section>
 
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm space-y-4">
+        <section className="p-6 rounded-xl app-panel space-y-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-slate-900">Traveller Details</h3>
@@ -699,7 +699,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
             ))}
             <button
               type="button"
-              className="text-sm font-semibold text-blue-600"
+              className="btn btn-link text-sm"
               onClick={() => setTravellers((prev) => [...prev, createTravellerRow()])}
             >
               + Add Traveller
@@ -707,7 +707,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
           </div>
         </section>
 
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm space-y-4">
+        <section className="p-6 rounded-xl app-panel space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Expense Details</h3>
@@ -821,12 +821,12 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
               </tbody>
             </table>
           </div>
-          <button type="button" className="text-sm font-semibold text-blue-600" onClick={() => setExpenses((prev) => [...prev, createExpenseRow()])}>
+          <button type="button" className="btn btn-link text-sm" onClick={() => setExpenses((prev) => [...prev, createExpenseRow()])}>
             + Add Expense Row
           </button>
         </section>
 
-        <section className="p-6 border border-slate-200 rounded-xl bg-white shadow-sm space-y-4">
+        <section className="p-6 rounded-xl app-panel space-y-4">
           <h3 className="text-lg font-semibold text-slate-900">Approval Attachments</h3>
           <p className="text-sm text-slate-600">All supporting documents are mandatory prior to review.</p>
           <div className="space-y-3">
@@ -844,7 +844,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
                   <button
                     type="button"
                     onClick={() => document.getElementById(`file-${item}`)?.click()}
-                    className="px-3 py-1.5 text-xs rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                    className="btn btn-primary btn-sm"
                   >
                     {files[item] && files[item].length > 0 ? `Add More (${files[item].length})` : 'Add File'}
                   </button>
@@ -859,7 +859,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
                         <button
                           type="button"
                           onClick={() => removeFile(item, idx)}
-                          className="px-2 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                          className="btn btn-soft-danger btn-sm"
                         >
                           Remove
                         </button>
@@ -889,7 +889,7 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
             type="button"
             onClick={handleSubmitForReview}
             disabled={busyAction !== 'idle'}
-            className="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg shadow hover:bg-emerald-700 disabled:opacity-60"
+            className="btn btn-primary disabled:opacity-60"
           >
             {busyAction === 'submit' ? 'Submitting…' : 'Submit for Review'}
           </button>
@@ -897,14 +897,14 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
         {status && <p className="text-sm text-slate-600">{status}</p>}
       </form>
 
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="p-6 rounded-xl app-panel">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-slate-900">Recent Applications</h3>
           {applications.length > 0 && onNavigateToApplications && (
             <button
               type="button"
               onClick={onNavigateToApplications}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="btn btn-link text-sm"
             >
               View All →
             </button>
@@ -951,4 +951,3 @@ export const ApplicationForm = ({ applications, user, onCreate, onSubmit, onNavi
     </div>
   );
 };
-

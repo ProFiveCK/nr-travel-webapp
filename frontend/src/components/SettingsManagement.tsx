@@ -138,13 +138,13 @@ export const SettingsManagement = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-stagger">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-slate-800">System Settings</h2>
         <button
           onClick={saveSettings}
           disabled={saving}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save All Settings'}
         </button>
@@ -177,7 +177,7 @@ export const SettingsManagement = () => {
       {/* Email Settings Tab */}
       {activeTab === 'email' && settings && settings.email && (
         <div className="space-y-6">
-          <section className="bg-white p-6 rounded-lg border border-slate-200">
+          <section className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">SMTP Configuration</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -285,7 +285,7 @@ export const SettingsManagement = () => {
             </div>
           </section>
 
-          <section className="bg-white p-6 rounded-lg border border-slate-200">
+          <section className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">Email Notifications</h3>
             <div className="space-y-3">
               <label className="flex items-center space-x-2">
@@ -341,10 +341,10 @@ export const SettingsManagement = () => {
           </section>
 
           {settings.email.templates && (
-            <section className="bg-white p-6 rounded-lg border border-slate-200">
+            <section className="p-6 rounded-lg app-panel">
               <h3 className="text-lg font-semibold text-slate-800 mb-4">Email Templates</h3>
               <p className="text-sm text-slate-600 mb-4">
-                Customize email templates using variables like <code className="bg-slate-100 px-1 rounded">{'{{applicationNumber}}'}</code>, <code className="bg-slate-100 px-1 rounded">{'{{applicantName}}'}</code>, <code className="bg-slate-100 px-1 rounded">{'{{eventTitle}}'}</code>, etc.
+                Customise email templates using variables like <code className="bg-slate-100 px-1 rounded">{'{{applicationNumber}}'}</code>, <code className="bg-slate-100 px-1 rounded">{'{{applicantName}}'}</code>, <code className="bg-slate-100 px-1 rounded">{'{{eventTitle}}'}</code>, etc.
               </p>
 
               <div className="space-y-6">
@@ -658,7 +658,7 @@ export const SettingsManagement = () => {
 
       {/* Workflow Settings Tab */}
       {activeTab === 'workflow' && (
-        <div className="bg-white p-6 rounded-lg border border-slate-200">
+        <div className="p-6 rounded-lg app-panel">
           <h3 className="text-lg font-semibold text-slate-800 mb-4">Workflow Configuration</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -730,7 +730,7 @@ export const SettingsManagement = () => {
 
       {/* Uploads Settings Tab */}
       {activeTab === 'uploads' && (
-        <div className="bg-white p-6 rounded-lg border border-slate-200">
+        <div className="p-6 rounded-lg app-panel">
           <h3 className="text-lg font-semibold text-slate-800 mb-4">File Upload Configuration</h3>
           <div className="space-y-4">
             <div>
@@ -770,7 +770,7 @@ export const SettingsManagement = () => {
 
       {/* Security Settings Tab */}
       {activeTab === 'security' && (
-        <div className="bg-white p-6 rounded-lg border border-slate-200">
+        <div className="p-6 rounded-lg app-panel">
           <h3 className="text-lg font-semibold text-slate-800 mb-4">Security Configuration</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -811,7 +811,7 @@ export const SettingsManagement = () => {
 
       {/* LDAP Settings Tab */}
       {activeTab === 'ldap' && settings.ldap && (
-        <div className="bg-white p-6 rounded-lg border border-slate-200">
+        <div className="p-6 rounded-lg app-panel">
           <h3 className="text-lg font-semibold text-slate-800 mb-4">LDAP Configuration</h3>
           <p className="text-sm text-slate-600 mb-4">
             Configure LDAP integration to allow users to log in with their directory credentials.
@@ -861,7 +861,7 @@ export const SettingsManagement = () => {
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="(uid={{username}})"
                 />
-                <p className="text-xs text-slate-500 mt-1">Use {'{{username}}'} as placeholder for the login username. Example: (sAMAccountName={'{{username}}'}) for Active Directory.</p>
+                <p className="text-xs text-slate-500 mt-1">Use {'{{username}}'} as placeholder for the log-in username. Example: (sAMAccountName={'{{username}}'}) for Active Directory.</p>
               </div>
 
               <div>
@@ -895,7 +895,7 @@ export const SettingsManagement = () => {
       {/* System Settings Tab */}
       {
         activeTab === 'system' && (
-          <div className="bg-white p-6 rounded-lg border border-slate-200">
+          <div className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">System Configuration</h3>
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -937,7 +937,7 @@ export const SettingsManagement = () => {
       {
         activeTab === 'application' && (
           <div className="space-y-6">
-            <section className="bg-white p-6 rounded-lg border border-slate-200">
+            <section className="p-6 rounded-lg app-panel">
               <h3 className="text-lg font-semibold text-slate-800 mb-4">Expense Types</h3>
               <p className="text-sm text-slate-600 mb-4">
                 Manage the list of expense types available in the travel application form dropdown.
@@ -1014,4 +1014,3 @@ export const SettingsManagement = () => {
     </div >
   );
 };
-

@@ -117,7 +117,7 @@ export const MinistersManagement = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 reveal-stagger">
             <div className="flex items-center justify-between mb-4">
                 <div>
                     <h2 className="text-2xl font-semibold text-slate-800">Ministers Management</h2>
@@ -127,13 +127,13 @@ export const MinistersManagement = () => {
                 </div>
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="btn btn-primary btn-sm"
                 >
                     + Add Minister
                 </button>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border border-slate-200">
+            <div className="p-6 rounded-lg app-panel">
                 <div className="space-y-3">
                     {ministers.map((minister) => (
                         <div key={minister.id} className="flex items-center justify-between border border-slate-100 rounded-lg px-4 py-3">
@@ -145,7 +145,7 @@ export const MinistersManagement = () => {
                             </div>
                             <button
                                 onClick={() => removeMinisterRole(minister.id)}
-                                className="px-3 py-1 text-xs font-medium rounded-md bg-red-100 text-red-700 hover:bg-red-200"
+                                className="btn btn-soft-danger btn-sm"
                             >
                                 Remove Role
                             </button>
@@ -159,7 +159,7 @@ export const MinistersManagement = () => {
             {/* Create Minister Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+                    <div className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full">
                         <h3 className="text-lg font-bold mb-4 text-gray-800">Add New Minister</h3>
                         <div className="space-y-4">
                             <div>
@@ -206,13 +206,13 @@ export const MinistersManagement = () => {
                         <div className="flex justify-end gap-2 mt-6">
                             <button
                                 onClick={() => setShowCreateModal(false)}
-                                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                                className="btn btn-outline btn-sm"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={createMinister}
-                                className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                                className="btn btn-primary btn-sm"
                             >
                                 Create Minister
                             </button>

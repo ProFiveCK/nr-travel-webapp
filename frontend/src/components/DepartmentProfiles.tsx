@@ -116,12 +116,12 @@ export const DepartmentProfiles = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-stagger">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-slate-800">Department Profiles</h2>
         <button
           onClick={handleCreate}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="btn btn-primary btn-sm"
         >
           + Add Department Profile
         </button>
@@ -133,7 +133,7 @@ export const DepartmentProfiles = () => {
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg border border-slate-200">
+      <div className="p-6 rounded-lg app-panel">
         <p className="text-sm text-slate-600 mb-4">
           Manage department head and secretary information. This information will be automatically applied to all users in the department.
         </p>
@@ -166,13 +166,13 @@ export const DepartmentProfiles = () => {
                 <div className="flex gap-2 ml-4">
                   <button
                     onClick={() => handleEdit(profile)}
-                    className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                    className="btn btn-outline btn-sm"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(profile.depHead)}
-                    className="px-3 py-1 text-sm rounded bg-rose-500 text-white hover:bg-rose-600"
+                    className="btn btn-danger btn-sm"
                   >
                     Delete
                   </button>
@@ -189,7 +189,7 @@ export const DepartmentProfiles = () => {
       {/* Create/Edit Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold mb-4 text-gray-800">
               {editingProfile ? 'Edit Department Profile' : 'Create Department Profile'}
             </h3>
@@ -276,14 +276,14 @@ export const DepartmentProfiles = () => {
                   setShowCreateModal(false);
                   setEditingProfile(null);
                 }}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={!formData.depHead || !formData.deptName || !formData.headName || !formData.headEmail}
-                className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {editingProfile ? 'Update' : 'Create'}
               </button>
@@ -294,4 +294,3 @@ export const DepartmentProfiles = () => {
     </div>
   );
 };
-

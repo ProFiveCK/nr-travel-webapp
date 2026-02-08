@@ -92,13 +92,13 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 reveal-stagger">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-semibold text-slate-800">Minister Approval Queue</h2>
                     <button
                         onClick={() => { loadQueue(); loadArchived(); }}
-                        className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm"
+                        className="btn btn-primary btn-sm"
                     >
                         Refresh
                     </button>
@@ -110,7 +110,7 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
                     </div>
                 )}
 
-                <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+                <div className="rounded-lg app-panel">
                     <div className="p-6">
                         <p className="text-sm text-slate-600 mb-4">
                             {queue.length} application{queue.length !== 1 ? 's' : ''} pending your approval
@@ -171,21 +171,21 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
                                             <div className="flex flex-col gap-2">
                                                 <button
                                                     onClick={() => handleViewApplication(app)}
-                                                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 text-sm font-medium"
+                                                    className="btn btn-outline btn-sm"
                                                 >
                                                     View Details
                                                 </button>
                                                 <button
                                                     onClick={() => openDecisionModal(app.id, 'MINISTER_APPROVED')}
                                                     disabled={processing === app.id}
-                                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium disabled:opacity-50"
+                                                    className="btn btn-primary btn-sm disabled:opacity-50"
                                                 >
                                                     Approve
                                                 </button>
                                                 <button
                                                     onClick={() => openDecisionModal(app.id, 'MINISTER_REJECTED')}
                                                     disabled={processing === app.id}
-                                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium disabled:opacity-50"
+                                                    className="btn btn-danger btn-sm disabled:opacity-50"
                                                 >
                                                     Reject
                                                 </button>
@@ -202,7 +202,7 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
             {/* Archived / Past Decisions Section */}
             <div className="space-y-4">
                 <h2 className="text-xl font-semibold text-slate-800">Past Decisions (Archive)</h2>
-                <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                <div className="rounded-lg app-panel overflow-hidden">
                     {archived.length === 0 ? (
                         <div className="p-8 text-center text-slate-500">
                             No past decisions found.
@@ -246,7 +246,7 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
                                             <td className="px-4 py-3">
                                                 <button
                                                     onClick={() => handleViewApplication(app)}
-                                                    className="text-blue-600 hover:text-blue-800 font-medium"
+                                                    className="btn btn-link text-sm"
                                                 >
                                                     View
                                                 </button>
@@ -263,12 +263,12 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
             {/* View Application Modal */}
             {viewingApplication && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
-                    <div className="bg-white rounded-lg p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-2xl p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-bold text-gray-800">Application Details</h3>
                             <button
                                 onClick={() => setViewingApplication(null)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="btn btn-link text-sm"
                             >
                                 ✕
                             </button>
@@ -327,7 +327,7 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
                         <div className="flex justify-end gap-2 mt-6">
                             <button
                                 onClick={() => setViewingApplication(null)}
-                                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                                className="btn btn-outline btn-sm"
                             >
                                 Close
                             </button>
@@ -339,7 +339,7 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
             {/* Decision Modal */}
             {showDecisionModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+                    <div className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full">
                         <h3 className="text-lg font-bold mb-2 text-gray-800">
                             {showDecisionModal.action === 'MINISTER_APPROVED' ? 'Approve Application' : 'Reject Application'}
                         </h3>
@@ -364,15 +364,15 @@ export const MinisterDashboard = ({ onRefresh }: Props) => {
                                     setShowDecisionModal(null);
                                     setNote('');
                                 }}
-                                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                                className="btn btn-outline btn-sm"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={submitDecision}
-                                className={`px-4 py-2 text-sm rounded-md text-white ${showDecisionModal.action === 'MINISTER_APPROVED'
-                                    ? 'bg-green-600 hover:bg-green-700'
-                                    : 'bg-red-600 hover:bg-red-700'
+                                className={`btn btn-sm text-white ${showDecisionModal.action === 'MINISTER_APPROVED'
+                                    ? 'btn-primary'
+                                    : 'btn-danger'
                                     }`}
                             >
                                 Confirm {showDecisionModal.action === 'MINISTER_APPROVED' ? 'Approval' : 'Rejection'}

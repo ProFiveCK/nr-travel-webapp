@@ -117,7 +117,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
               <p className="text-xs uppercase tracking-[0.3em] text-emerald-200 font-semibold mb-3">Today</p>
               <p className="text-2xl font-display">Faster approvals, clearer oversight.</p>
               <p className="text-sm text-slate-300 mt-3">
-                Centralize applications, track reviews, and keep travel compliant with policy.
+                Centralise applications, track reviews, and keep travel compliant with policy.
               </p>
             </div>
           </section>
@@ -250,7 +250,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
                 onClick={() => setMode('login')}
                 disabled={busy}
               >
-                Back to Login
+                Back to Sign In
               </button>
             </div>
           </form>

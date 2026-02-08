@@ -41,13 +41,13 @@ export const NavigationTabs = ({
   });
 
   return (
-    <nav className="flex border-b border-slate-200 bg-slate-50 rounded-t-xl">
+    <nav className="app-tabs flex border-b border-slate-200 rounded-t-xl">
       {availableTabs.map((tab) => (
         <button
           key={tab}
-          className={clsx('tab-button flex-1 text-center', {
-            'tab-active bg-white text-orange-600 border-b-4 border-orange-500': active === tab,
-            'tab-inactive text-slate-500 hover:text-orange-500': active !== tab,
+          className={clsx('tab-button flex-1 text-center transition-colors', {
+            'tab-active bg-white text-emerald-700 border-b-4 border-emerald-500': active === tab,
+            'tab-inactive text-slate-500 hover:text-emerald-600': active !== tab,
           })}
           onClick={() => onChange(tab)}
         >

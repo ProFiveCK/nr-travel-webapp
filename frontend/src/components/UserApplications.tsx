@@ -235,7 +235,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
     <h3>Approval Information</h3>
     <p><strong>Approved Date:</strong> ${app.decidedAt ? formatDateNauru(app.decidedAt) : 'N/A'}</p>
     <div class="signature-line"></div>
-    <p class="signature-label">Authorized Signature</p>
+    <p class="signature-label">Authorised Signature</p>
   </div>
 </body>
 </html>`;
@@ -422,7 +422,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 reveal-stagger">
       {uploadStatus && (
         <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${uploadStatus.includes('successfully') || uploadStatus.includes('success')
             ? 'bg-green-50 text-green-800 border border-green-200'
@@ -434,7 +434,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="rounded-lg app-panel overflow-hidden">
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200">
           <h2 className="text-xl font-semibold text-slate-800">My Applications</h2>
           <p className="text-sm text-slate-600 mt-1">Track the status of your travel applications</p>
@@ -502,7 +502,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleViewApplication(app)}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="btn btn-outline btn-sm"
                       >
                         View Details
                       </button>
@@ -510,13 +510,13 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                         <>
                           <button
                             onClick={() => handlePrintPDF(app)}
-                            className="text-green-600 hover:text-green-800 font-medium"
+                            className="btn btn-secondary btn-sm"
                           >
                             Print PDF
                           </button>
                           <button
                             onClick={() => handleDownloadFiles(app)}
-                            className="text-purple-600 hover:text-purple-800 font-medium"
+                            className="btn btn-primary btn-sm"
                           >
                             Download Files
                           </button>
@@ -533,14 +533,14 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
 
       {selectedApplication && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-slate-200 flex justify-between items-center">
               <h3 className="text-xl font-semibold text-slate-800">
                 Application Details - {selectedApplication.applicationNumber || selectedApplication.id.slice(0, 8)}
               </h3>
               <button
                 onClick={() => setSelectedApplication(null)}
-                className="text-slate-500 hover:text-slate-700 text-2xl font-bold"
+                className="btn btn-link text-sm"
               >
                 ×
               </button>
@@ -671,7 +671,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                         <a
                           href={attachment.downloadUrl}
                           download
-                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs"
+                          className="btn btn-primary btn-sm"
                         >
                           Download
                         </a>
@@ -689,7 +689,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                       This application was rejected. You can add missing attachments and resubmit.
                     </p>
                     <div className="space-y-3">
-                      {['Invitation from event organizer', 'Travel cost quotation (least cost flights)', 'Justification for unfunded participants', 'Explanation when latest flights are not used'].map((item) => {
+                      {['Invitation from event organiser', 'Travel cost quotation (least cost flights)', 'Justification for unfunded participants', 'Explanation when latest flights are not used'].map((item) => {
                         const key = `${selectedApplication.id}-${item}`;
                         const files = uploadingFiles[key] || [];
                         return (
@@ -733,7 +733,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                                   console.error('[UserApplications] File input not found:', `file-${key}`);
                                 }
                               }}
-                              className="px-3 py-1 text-xs rounded-md bg-blue-600 text-white hover:bg-blue-700 whitespace-nowrap"
+                              className="btn btn-primary btn-sm whitespace-nowrap"
                             >
                               {files.length > 0 ? `Add More (${files.length})` : 'Add File'}
                             </button>
@@ -745,7 +745,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                                 <button
                                   type="button"
                                   onClick={() => handleUploadFiles(selectedApplication.id, item)}
-                                  className="px-3 py-1 text-xs rounded-md bg-green-600 text-white hover:bg-green-700 whitespace-nowrap"
+                                  className="btn btn-primary btn-sm whitespace-nowrap"
                                 >
                                   Upload {files.length} file{files.length > 1 ? 's' : ''}
                                 </button>
@@ -764,7 +764,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                                       input.value = '';
                                     }
                                   }}
-                                  className="px-3 py-1 text-xs rounded-md bg-red-600 text-white hover:bg-red-700 whitespace-nowrap"
+                                  className="btn btn-danger btn-sm whitespace-nowrap"
                                 >
                                   Clear
                                 </button>
@@ -777,7 +777,7 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
                         <button
                           type="button"
                           onClick={() => handleResubmit(selectedApplication.id)}
-                          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium"
+                          className="btn btn-primary btn-sm"
                         >
                           Resubmit Application
                         </button>
@@ -793,4 +793,3 @@ export const UserApplications = ({ user, onRefresh }: Props) => {
     </div>
   );
 };
-

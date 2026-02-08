@@ -43,7 +43,7 @@ export const PasswordChangeModal = ({ onPasswordChanged, onCancel }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+      <div className="rounded-2xl p-6 app-panel max-w-md w-full reveal">
         <h3 className="text-lg font-bold mb-2 text-gray-800">Change Password Required</h3>
         <p className="text-sm text-gray-600 mb-4">
           You must change your password before continuing.
@@ -79,7 +79,7 @@ export const PasswordChangeModal = ({ onPasswordChanged, onCancel }: Props) => {
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
@@ -87,7 +87,7 @@ export const PasswordChangeModal = ({ onPasswordChanged, onCancel }: Props) => {
             <button
               type="submit"
               disabled={busy}
-              className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="btn btn-primary btn-sm disabled:opacity-50"
             >
               {busy ? 'Changing...' : 'Change Password'}
             </button>
@@ -97,4 +97,3 @@ export const PasswordChangeModal = ({ onPasswordChanged, onCancel }: Props) => {
     </div>
   );
 };
-

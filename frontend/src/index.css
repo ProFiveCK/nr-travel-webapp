@@ -52,6 +52,161 @@ body {
   box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22);
 }
 
+.app-shell {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.9));
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16);
+}
+
+.app-header {
+  background: linear-gradient(120deg, #0f766e 0%, #0f172a 100%);
+}
+
+.app-tabs {
+  background: rgba(248, 250, 252, 0.9);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.app-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.2rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.65rem;
+  font-size: 0.75rem;
+}
+
+.btn-primary {
+  background: var(--brand-600);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(15, 118, 110, 0.22);
+}
+
+.btn-primary:hover {
+  background: #0c6b64;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: var(--ink-900);
+}
+
+.btn-secondary:hover {
+  background: #cbd5f5;
+}
+
+.btn-outline {
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  color: var(--ink-700);
+  background: #fff;
+}
+
+.btn-outline:hover {
+  border-color: rgba(15, 118, 110, 0.5);
+  color: var(--brand-600);
+}
+
+.btn-danger {
+  background: #e11d48;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(225, 29, 72, 0.22);
+}
+
+.btn-danger:hover {
+  background: #be123c;
+}
+
+.btn-soft-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btn-soft-danger:hover {
+  background: #fecaca;
+}
+
+.btn-link {
+  padding: 0;
+  background: transparent;
+  color: var(--brand-600);
+  box-shadow: none;
+}
+
+.btn-link:hover {
+  color: #0c6b64;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.app-shell button:not(.btn) {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.app-shell button:not(.btn):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+.app-shell button:not(.btn):active {
+  transform: translateY(1px);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: rise-in 0.6s ease both;
+}
+
+.reveal-stagger > * {
+  animation: rise-in 0.6s ease both;
+}
+
+.reveal-stagger > *:nth-child(2) { animation-delay: 0.05s; }
+.reveal-stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.reveal-stagger > *:nth-child(4) { animation-delay: 0.15s; }
+.reveal-stagger > *:nth-child(5) { animation-delay: 0.2s; }
+.reveal-stagger > *:nth-child(6) { animation-delay: 0.25s; }
+.reveal-stagger > *:nth-child(7) { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > * {
+    animation: none;
+  }
+}
+
 .auth-orb {
   position: absolute;
   width: 220px;

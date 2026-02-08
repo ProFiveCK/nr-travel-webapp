@@ -37,10 +37,10 @@ export const SetupWizard = ({ onComplete }: Props) => {
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-xl overflow-hidden">
-                <div className="bg-blue-600 p-6 text-center">
+            <div className="max-w-md w-full rounded-2xl app-panel overflow-hidden reveal">
+                <div className="app-header p-6 text-center">
                     <h1 className="text-2xl font-bold text-white">System Setup</h1>
-                    <p className="text-blue-100 mt-2">Welcome to the Travel Application</p>
+                    <p className="text-emerald-100 mt-2">Welcome to the Travel Application</p>
                 </div>
 
                 <div className="p-8">
@@ -50,7 +50,7 @@ export const SetupWizard = ({ onComplete }: Props) => {
                             <span className="text-sm font-medium text-blue-600">Administrator Account</span>
                         </div>
                         <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-600 w-full transition-all duration-500"></div>
+                            <div className="h-full bg-emerald-600 w-full transition-all duration-500"></div>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@ export const SetupWizard = ({ onComplete }: Props) => {
                         <button
                             type="submit"
                             disabled={busy}
-                            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                            className="btn btn-primary w-full disabled:opacity-50"
                         >
                             {busy ? 'Setting up...' : 'Complete Setup'}
                         </button>

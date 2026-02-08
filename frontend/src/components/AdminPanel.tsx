@@ -115,7 +115,7 @@ export const AdminPanel = () => {
       setRequests((prev) => prev.filter((r) => r.id !== id));
       const { data: userData } = await api.get('/admin/users');
       setUsers(userData.users);
-      setStatus('User approved successfully. They can login with their registration password.');
+      setStatus('User approved successfully. They can log in with their registration password.');
       setTimeout(() => setStatus(null), 3000);
     } catch {
       setStatus('Failed to approve request.');
@@ -166,7 +166,7 @@ export const AdminPanel = () => {
 
       setStatus(
         data.tempPassword
-          ? `User updated! Password reset to: ${data.tempPassword} (user must change on login: ${editUserData.forceChangeOnLogin ? 'Yes' : 'No'})`
+          ? `User updated! Password reset to: ${data.tempPassword} (user must change on log in: ${editUserData.forceChangeOnLogin ? 'Yes' : 'No'})`
           : 'User updated successfully!'
       );
 
@@ -348,7 +348,7 @@ export const AdminPanel = () => {
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-stagger">
       {/* Tab Navigation */}
       <div className="border-b border-slate-200">
         <nav className="flex space-x-4">
@@ -409,14 +409,14 @@ export const AdminPanel = () => {
                 {users.length} active user{users.length !== 1 ? 's' : ''} • {archivedUsers.length} archived
               </p>
             </div>
-            <button
-              onClick={() => setShowCreateUserModal(true)}
-              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
-            >
-              + Create New User
-            </button>
-          </div>
-          <section className="bg-white p-6 rounded-lg border border-slate-200">
+          <button
+            onClick={() => setShowCreateUserModal(true)}
+            className="btn btn-primary btn-sm"
+          >
+            + Create New User
+          </button>
+        </div>
+          <section className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">Pending Signup Requests</h3>
             <div className="space-y-3">
               {requests.map((request) => (
@@ -426,10 +426,10 @@ export const AdminPanel = () => {
                     <p className="text-sm text-slate-500">{request.department}</p>
                   </div>
                   <div className="space-x-2">
-                    <button className="px-3 py-1 text-sm rounded bg-emerald-500 text-white" onClick={() => approveRequest(request.id)}>
+                    <button className="btn btn-primary btn-sm" onClick={() => approveRequest(request.id)}>
                       Approve
                     </button>
-                    <button className="px-3 py-1 text-sm rounded bg-rose-500 text-white" onClick={() => rejectRequest(request.id)}>
+                    <button className="btn btn-danger btn-sm" onClick={() => rejectRequest(request.id)}>
                       Reject
                     </button>
                   </div>
@@ -438,7 +438,7 @@ export const AdminPanel = () => {
               {requests.length === 0 && <p className="text-sm text-slate-500">No pending requests.</p>}
             </div>
           </section>
-          <section className="bg-white p-6 rounded-lg border border-slate-200">
+          <section className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800">Users &amp; Roles</h3>
             <div className="space-y-3">
               {users.map((user) => (
@@ -476,27 +476,27 @@ export const AdminPanel = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     {user.mustChangePassword && (
-                      <span className="px-2 py-1 text-xs rounded bg-orange-100 text-orange-800" title="User must change password on next login">
+                      <span className="px-2 py-1 text-xs rounded bg-orange-100 text-orange-800" title="User must change password on next log in">
                         Must Change Password
                       </span>
                     )}
                     <button
                       onClick={() => openEditModal(user)}
-                      className="px-3 py-1.5 text-xs font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                      className="btn btn-outline btn-sm"
                       title="Edit User"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => disableUser(user.id, user.email)}
-                      className="px-3 py-1.5 text-xs font-medium rounded-md bg-amber-500 text-white hover:bg-amber-600 shadow-sm"
+                      className="btn btn-secondary btn-sm"
                       title="Disable User"
                     >
                       Disable
                     </button>
                     <button
                       onClick={() => deleteUser(user.id, user.email)}
-                      className="px-3 py-1.5 text-xs font-medium rounded-md bg-red-600 text-white hover:bg-red-700 shadow-sm border border-red-700"
+                      className="btn btn-danger btn-sm"
                       title="Delete User Permanently"
                     >
                       Delete
@@ -508,7 +508,7 @@ export const AdminPanel = () => {
               {status && <p className="text-sm text-rose-600">{status}</p>}
             </div>
           </section>
-          <section className="bg-white p-6 rounded-lg border border-slate-200">
+          <section className="p-6 rounded-lg app-panel">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">Archived Users</h3>
             <p className="text-sm text-slate-600 mb-4">
               Users who have been disabled. They can be restored if needed.
@@ -536,7 +536,7 @@ export const AdminPanel = () => {
                   </div>
                   <button
                     onClick={() => restoreUser(user.id)}
-                    className="px-3 py-1 text-xs rounded bg-emerald-500 text-white hover:bg-emerald-600"
+                    className="btn btn-primary btn-sm"
                     title="Restore User"
                   >
                     Restore
@@ -554,7 +554,7 @@ export const AdminPanel = () => {
       {activeTab === 'settings' && <SettingsManagement />}
 
       {activeTab === 'applications' && (
-        <div className="bg-white p-6 rounded-lg border border-slate-200">
+        <div className="p-6 rounded-lg app-panel">
           <h2 className="text-2xl font-semibold text-slate-800 mb-4">Archived Applications</h2>
           <p className="text-sm text-slate-600 mb-4">View and manage all archived (approved) applications</p>
 
@@ -601,13 +601,13 @@ export const AdminPanel = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleViewApplication(app)}
-                            className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                            className="btn btn-outline btn-sm"
                           >
                             View
                           </button>
                           <button
                             onClick={() => handleDeleteApplication(app.id, app.applicationNumber || app.id.slice(0, 8))}
-                            className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+                            className="btn btn-soft-danger btn-sm"
                           >
                             Delete
                           </button>
@@ -625,7 +625,7 @@ export const AdminPanel = () => {
       {/* Edit User Modal */}
       {editUserModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold mb-4 text-gray-800">Edit User</h3>
             <p className="text-sm text-gray-600 mb-4">
               Editing: <strong>{editUserModal.email}</strong>
@@ -716,7 +716,7 @@ export const AdminPanel = () => {
                         onChange={(e) => setEditUserData({ ...editUserData, forceChangeOnLogin: e.target.checked })}
                         className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                       />
-                      <span className="text-sm font-medium text-slate-700">Force password change on next login</span>
+                      <span className="text-sm font-medium text-slate-700">Force password change on next log in</span>
                     </label>
                   </div>
                 )}
@@ -735,14 +735,14 @@ export const AdminPanel = () => {
                     forceChangeOnLogin: false,
                   });
                 }}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={saveUserEdit}
                 disabled={!editUserData.firstName || editUserData.roles.length === 0}
-                className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Save Changes
               </button>
@@ -754,7 +754,7 @@ export const AdminPanel = () => {
       {/* Create User Modal */}
       {showCreateUserModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden mx-auto">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden mx-auto">
             <h3 className="text-lg font-bold mb-4 text-gray-800">Create New User</h3>
             <div className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
@@ -869,14 +869,14 @@ export const AdminPanel = () => {
                     password: '',
                   });
                 }}
-                className="w-full sm:w-auto px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 flex-shrink-0"
+                className="btn btn-outline btn-sm w-full sm:w-auto flex-shrink-0"
               >
                 Cancel
               </button>
               <button
                 onClick={createUser}
                 disabled={!newUserData.email || !newUserData.firstName || !newUserData.password || newUserData.roles.length === 0 || !newUserData.departmentHeadCode}
-                className="w-full sm:w-auto px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                className="btn btn-primary btn-sm w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 Create User
               </button>
@@ -888,7 +888,7 @@ export const AdminPanel = () => {
       {/* View Application Modal */}
       {viewingApplication && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-2xl font-bold text-gray-800">Application Details</h3>
@@ -899,7 +899,7 @@ export const AdminPanel = () => {
               </div>
               <button
                 onClick={() => setViewingApplication(null)}
-                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                className="btn btn-link text-sm"
               >
                 ×
               </button>
@@ -1071,7 +1071,7 @@ export const AdminPanel = () => {
             <div className="mt-6 flex justify-end gap-2">
               <button
                 onClick={() => window.print()}
-                className="px-4 py-2 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="btn btn-primary btn-sm"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -1080,7 +1080,7 @@ export const AdminPanel = () => {
               </button>
               <button
                 onClick={() => setViewingApplication(null)}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Close
               </button>

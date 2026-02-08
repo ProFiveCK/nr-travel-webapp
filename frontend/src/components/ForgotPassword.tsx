@@ -27,7 +27,7 @@ export const ForgotPassword = ({ onBack }: Props) => {
 
     return (
         <div className="fixed inset-0 z-50 bg-slate-50/90 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl border border-slate-200">
+            <div className="w-full max-w-md p-8 rounded-2xl app-panel reveal">
                 <h2 className="text-2xl font-bold text-slate-800 mb-2">Reset Password</h2>
                 <p className="text-slate-600 mb-6">Enter your email address and we'll send you a link to reset your password.</p>
 
@@ -48,14 +48,14 @@ export const ForgotPassword = ({ onBack }: Props) => {
                             <button
                                 type="button"
                                 onClick={onBack}
-                                className="flex-1 py-2.5 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition"
+                                className="btn btn-outline w-full"
                             >
                                 Back
                             </button>
                             <button
                                 type="submit"
                                 disabled={busy}
-                                className="flex-1 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                                className="btn btn-primary w-full disabled:opacity-50"
                             >
                                 {busy ? 'Sending...' : 'Send Link'}
                             </button>
@@ -71,9 +71,9 @@ export const ForgotPassword = ({ onBack }: Props) => {
                         <p className="text-slate-800 font-medium mb-6">{message}</p>
                         <button
                             onClick={onBack}
-                            className="w-full py-2.5 bg-slate-100 text-slate-700 font-semibold rounded-lg hover:bg-slate-200 transition"
+                            className="btn btn-outline w-full"
                         >
-                            Back to Login
+                            Back to Sign In
                         </button>
                     </div>
                 )}

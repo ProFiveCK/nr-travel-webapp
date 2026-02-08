@@ -169,7 +169,7 @@ export const DepartmentsList = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-stagger">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-slate-800">Departments Master List</h2>
@@ -179,7 +179,7 @@ export const DepartmentsList = () => {
         </div>
         <button
           onClick={handleCreate}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="btn btn-primary btn-sm"
         >
           + Add Department
         </button>
@@ -192,7 +192,7 @@ export const DepartmentsList = () => {
             {!status.includes('successfully') && (
               <button
                 onClick={loadDepartments}
-                className="ml-4 px-3 py-1 text-sm rounded bg-rose-600 text-white hover:bg-rose-700"
+                className="btn btn-danger btn-sm ml-4"
               >
                 Retry
               </button>
@@ -201,7 +201,7 @@ export const DepartmentsList = () => {
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg border border-slate-200">
+      <div className="p-6 rounded-lg app-panel">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-slate-50">
@@ -237,14 +237,14 @@ export const DepartmentsList = () => {
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => handleEdit(dept)}
-                          className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs"
+                          className="btn btn-outline btn-sm"
                           title="Edit Department and Profile"
                         >
                           Edit Profile
                         </button>
                         <button
                           onClick={() => handleDelete(dept.depHead)}
-                          className="px-3 py-1 rounded bg-rose-500 text-white hover:bg-rose-600 text-xs"
+                          className="btn btn-danger btn-sm"
                         >
                           Delete
                         </button>
@@ -264,7 +264,7 @@ export const DepartmentsList = () => {
       {/* Create/Edit Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full">
             <h3 className="text-lg font-bold mb-4 text-gray-800">
               {editingDept ? 'Edit Department' : 'Add Department'}
             </h3>
@@ -306,14 +306,14 @@ export const DepartmentsList = () => {
                   setShowCreateModal(false);
                   setEditingDept(null);
                 }}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={!formData.depHead || !formData.deptName}
-                className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {editingDept ? 'Update' : 'Create'}
               </button>
@@ -325,7 +325,7 @@ export const DepartmentsList = () => {
       {/* Edit Profile Modal - Consolidated */}
       {showEditModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold mb-4 text-gray-800">
               Edit Department Profile
             </h3>
@@ -400,14 +400,14 @@ export const DepartmentsList = () => {
                   setEditingProfile(null);
                   setEditingDept(null);
                 }}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
                 disabled={!editFormData.deptName || !editFormData.secretaryName || !editFormData.secretaryEmail}
-                className="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Save
               </button>
@@ -418,4 +418,3 @@ export const DepartmentsList = () => {
     </div>
   );
 };
-

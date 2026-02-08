@@ -34,7 +34,7 @@ export const ResetPassword = ({ token, onComplete }: Props) => {
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 border border-slate-200">
+            <div className="max-w-md w-full rounded-2xl p-8 app-panel reveal">
                 <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Set New Password</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -71,7 +71,7 @@ export const ResetPassword = ({ token, onComplete }: Props) => {
                     <button
                         type="submit"
                         disabled={busy}
-                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                        className="btn btn-primary w-full disabled:opacity-50"
                     >
                         {busy ? 'Resetting...' : 'Reset Password'}
                     </button>

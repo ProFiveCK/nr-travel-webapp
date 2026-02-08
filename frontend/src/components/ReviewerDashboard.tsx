@@ -103,7 +103,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 reveal-stagger">
       {status && (
         <div className={`p-4 rounded-lg ${status.includes('successfully') ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}>
           {status}
@@ -111,7 +111,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
       )}
 
       {activeQueue.map((item) => (
-        <div key={item.id} className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+        <div key={item.id} className="rounded-lg p-4 app-panel hover:shadow-md transition-shadow">
           <div className="flex flex-col lg:flex-row lg:items-start gap-4">
             <div className="flex-1 space-y-2 min-w-0">
               <div className="flex items-center gap-2">
@@ -147,28 +147,28 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
               <button
                 onClick={() => openNoteModal(item.id, 'REFERRED_TO_MINISTER')}
                 disabled={processing === item.id}
-                className="px-3 py-1.5 rounded-md bg-purple-500 text-white text-sm hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                className="btn btn-secondary btn-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Send to Minister
               </button>
               <button
                 onClick={() => openNoteModal(item.id, 'APPROVED')}
                 disabled={processing === item.id}
-                className="px-3 py-1.5 rounded-md bg-amber-500 text-white text-sm hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                className="btn btn-primary btn-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Direct Approve
               </button>
               <button
                 onClick={() => openNoteModal(item.id, 'REJECTED')}
                 disabled={processing === item.id}
-                className="px-3 py-1.5 rounded-md bg-rose-500 text-white text-sm hover:bg-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                className="btn btn-danger btn-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reject
               </button>
               <button
                 onClick={() => openNoteModal(item.id, 'REQUEST_INFO')}
                 disabled={processing === item.id}
-                className="px-3 py-1.5 rounded-md border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                className="btn btn-outline btn-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Request Info
               </button>
@@ -185,7 +185,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
             <span className="text-sm text-slate-500">{archived.length} application{archived.length === 1 ? '' : 's'}</span>
           </div>
           {archived.map((item) => (
-            <div key={item.id} className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm">
+            <div key={item.id} className="rounded-lg p-4 app-panel">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -216,7 +216,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
                 </div>
                 <button
                   onClick={() => handleViewApplication(item)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+                  className="btn btn-primary btn-sm"
                 >
                   View & Print
                 </button>
@@ -229,7 +229,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
       {/* Application View Modal */}
       {viewingApplication && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto my-8">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-2xl font-bold text-gray-800">Application Details</h3>
@@ -411,7 +411,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
             <div className="mt-6 flex justify-end gap-2">
               <button
                 onClick={() => window.print()}
-                className="px-4 py-2 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="btn btn-primary btn-sm"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -420,7 +420,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
               </button>
               <button
                 onClick={() => setViewingApplication(null)}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Close
               </button>
@@ -432,7 +432,7 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
       {/* Note Modal */}
       {showNoteModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full">
             <h3 className="text-lg font-bold mb-2 text-gray-800">
               {showNoteModal.action === 'REJECTED' ? 'Reject Application' :
                 showNoteModal.action === 'APPROVED' ? 'Direct Approve Application' :
@@ -467,21 +467,21 @@ export const ReviewerDashboard = ({ queue, archived = [], onRefresh }: Props) =>
                   setShowNoteModal(null);
                   setNote('');
                 }}
-                className="px-4 py-2 text-sm rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50"
+                className="btn btn-outline btn-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={submitWithNote}
                 disabled={processing === showNoteModal.id || ((showNoteModal.action === 'REFERRED_TO_MINISTER' || showNoteModal.action === 'APPROVED') && !note.trim())}
-                className={`px-4 py-2 text-sm rounded-md text-white ${showNoteModal.action === 'REJECTED'
-                  ? 'bg-rose-500 hover:bg-rose-600'
+                className={`btn btn-sm disabled:opacity-50 disabled:cursor-not-allowed ${showNoteModal.action === 'REJECTED'
+                  ? 'btn-danger'
                   : showNoteModal.action === 'APPROVED'
-                    ? 'bg-amber-500 hover:bg-amber-600'
+                    ? 'btn-primary'
                     : showNoteModal.action === 'REFERRED_TO_MINISTER'
-                      ? 'bg-purple-500 hover:bg-purple-600'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      ? 'btn-secondary'
+                      : 'btn-primary'
+                  }`}
               >
                 {processing === showNoteModal.id ? 'Processing...' :
                   showNoteModal.action === 'REJECTED' ? 'Reject' :
