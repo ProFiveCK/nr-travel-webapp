@@ -47,9 +47,9 @@ flowchart TD
 ## Quick Start for Admins
 
 ### Initial Setup
-1. **Install dependencies**: Run `./install.sh`
-2. **Configure environment**: Run `./setup-config.sh docker`
-3. **Start services**: Run `docker compose up -d`
+1. **Bootstrap**: Run `./deploy-docker.sh`
+   - To reset the database (destructive): use `./deploy-docker-reset-db.sh`
+   - For CI or non-interactive: add `--no-prompt` to `deploy.sh`
 4. **Access application**: Navigate to `http://localhost:8090`
 5. **Login**: Use default test credentials (see [DEVELOPMENT_CREDENTIALS.md](./DEVELOPMENT_CREDENTIALS.md))
 

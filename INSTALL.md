@@ -1,6 +1,6 @@
 # Installation Guide
 
-Quick setup for NR Travel Webapp using the automated install script.
+Quick setup for NR Travel Webapp using the automated deploy script.
 
 ## Quick Start (Recommended)
 
@@ -10,17 +10,21 @@ git clone https://github.com/your-org/nr-travel-webapp.git
 cd nr-travel-webapp
 ```
 
-### 2. Run the Install Script
+### 2. Run the Deploy Script
 ```bash
-./install.sh
+./deploy-docker.sh
 ```
 
 The script will:
 - ✓ Verify Node.js and npm are installed
 - ✓ Create `.env` file (if missing)
-- ✓ Install backend dependencies
-- ✓ Install frontend dependencies
+- ✓ Install backend + frontend dependencies
 - ✓ Verify all lock files are in place
+- ✓ Configure `.env` based on environment
+- ✓ Auto-generate JWT secrets if missing
+- ✓ Auto-generate `POSTGRES_PASSWORD` if missing (shown once)
+- ✓ Default `POSTGRES_USER`/`POSTGRES_DB` to `travel` if placeholders
+- ✓ Build and start Docker services
 
 ### 3. Configure Environment
 Edit the `.env` file with your deployment-specific settings:
@@ -38,9 +42,10 @@ Key configuration areas:
 
 ### 4. Start the Application
 
-#### Option A: Docker (Recommended for Production)
+For production:
+
 ```bash
-docker compose up -d
+./deploy-production.sh https://yourdomain.com
 ```
 
 #### Option B: Local Development
@@ -48,7 +53,7 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md) for running locally
 
 ## Manual Installation (if script fails)
 
-If the install script encounters issues:
+If the deploy script encounters issues:
 
 ```bash
 # Install backend dependencies
@@ -69,16 +74,16 @@ cd ..
 - Verify installation: `node --version`
 
 ### "npm ci" fails in Docker
-- Lock files are required. The install script creates them.
+- Lock files are required. The deploy script creates them.
 - Check that `backend/package-lock.json` and `frontend/package-lock.json` exist
 
 ### "Cannot find module" errors
-- Run the install script again: `./install.sh`
+- Run the deploy script again: `./deploy.sh --env docker --url http://localhost:8090`
 - Or manually run `npm install` in each directory
 
 ## Requirements Met
 
-✓ **Single command setup**: `./install.sh`  
+✓ **Single command setup**: `./deploy.sh`  
 ✓ **Automatic .env creation**: Creates from template if missing  
 ✓ **Reproducible builds**: Lock files ensure consistent dependencies  
 ✓ **Long-term sustainability**: Easy for new team members  
@@ -94,7 +99,7 @@ cd ..
 ## Support
 
 If you encounter any issues:
-1. Check the error message from the install script
+1. Check the error message from the deploy script
 2. Review the relevant documentation file
 3. Ensure all prerequisites are installed
-4. Try running `./install.sh` again
+4. Try running `./deploy.sh --env docker --url http://localhost:8090` again

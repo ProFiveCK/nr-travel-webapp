@@ -2,20 +2,21 @@
 
 This guide explains how to configure and deploy the NR Travel Webapp for different environments.
 
-## Quick Start: Auto-Configure for Your Environment
+## Quick Start: One-Step Deploy
 
-We provide a setup script that automatically configures everything:
+Use the deploy script to install, configure, and start services:
 
 ```bash
-# For local development
-./setup-config.sh development
+# Local Docker
+./deploy-docker.sh
 
-# For Docker deployment
-./setup-config.sh docker
-
-# For production (manual configuration required)
-./setup-config.sh production
+# Production
+./deploy-production.sh https://yourdomain.com
 ```
+
+Notes:
+- Use `./deploy-docker-reset-db.sh` to wipe and recreate the DB (destructive)
+- Use `./deploy.sh --no-prompt` for CI/non-interactive runs
 
 ---
 
@@ -26,11 +27,8 @@ We provide a setup script that automatically configures everything:
 **Use when**: Developing features locally on macOS/Linux
 
 ```bash
-# Setup configuration
+# Configure environment
 ./setup-config.sh development
-
-# Install dependencies
-./install.sh
 
 # Start backend (in one terminal)
 cd backend && npm run dev
@@ -53,11 +51,8 @@ cd frontend && npm run dev
 **Use when**: Running the full stack with Docker Compose
 
 ```bash
-# Setup configuration
-./setup-config.sh docker
-
 # Build and start all services
-docker compose up -d
+./deploy.sh --env docker --url http://localhost:8090
 
 # Access at: http://localhost:8090
 ```
@@ -142,11 +137,8 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 git clone <repo> /app/travel
 cd /app/travel
 
-# Install & build
-./install.sh
-
-# Start with Docker Compose
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Deploy
+./deploy.sh --env production --url https://travel.yourdomain.com
 
 # Or deploy to cloud (AWS, Heroku, DigitalOcean, etc.)
 # using provided deployment configurations
@@ -287,11 +279,10 @@ docker compose up -d --build
 ```bash
 # 1. Update .env for production domain
 nano .env
-# Change: PUBLIC_URL, CLIENT_URL, API_URL, POSTGRES_*, etc.
+# Change: PUBLIC_URL, CLIENT_URL, API_URL, POSTGRES_*, SERVER_NAME, etc.
 
-# 2. Update nginx.conf for production domain
-# 3. Set up SSL certificate (Let's Encrypt)
-# 4. Deploy using your cloud provider
+# 2. Set up SSL certificate (Let's Encrypt)
+# 3. Deploy using your cloud provider
 ```
 
 ---
@@ -302,7 +293,7 @@ nano .env
 - Use `./setup-config.sh` to initialize environment
 - Keep secrets in `.env` (never commit this file)
 - Use strong, unique JWT secrets in production
-- Run `./install.sh` before deployment
+- Run `./deploy.sh` for deployments
 - Version control `.env.example` with comments
 
 ❌ **DON'T:**

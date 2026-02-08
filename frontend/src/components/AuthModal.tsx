@@ -89,33 +89,71 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50/90 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl border border-slate-200">
-        <div className="flex justify-center mb-6">
-          <img src="/logo.png" alt="Logo" className="h-32 w-auto" />
-        </div>
-        <h1 className="text-3xl font-bold text-blue-700 text-center mb-6">Nauru Travel Application</h1>
-        <p className="text-center text-sm text-slate-500 mb-6">
-          {mode === 'login' ? 'Please log in to access the application.' : 'Create your account to submit travel requests.'}
-        </p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
+      <div className="absolute inset-0 bg-slate-900/20" />
+      <div className="absolute -top-10 left-6 auth-orb teal" />
+      <div className="absolute -bottom-12 right-8 auth-orb gold" />
+      <div className="relative w-full max-w-4xl auth-shell rounded-3xl overflow-hidden">
+        <div className="grid gap-0 lg:grid-cols-[1.05fr_1fr]">
+          <section className="px-8 py-10 sm:px-12 sm:py-12 bg-white/80">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-14 w-14 rounded-2xl bg-white shadow-md border border-slate-200 flex items-center justify-center">
+                <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-emerald-700 font-semibold">Nauru Government</p>
+                <h1 className="font-display text-3xl sm:text-4xl text-slate-900">
+                  Travel Application Desk
+                </h1>
+              </div>
+            </div>
+            <p className="text-sm sm:text-base text-slate-600 mb-8">
+              {mode === 'login'
+                ? 'Secure access for staff and reviewers. Sign in to continue your workflow.'
+                : 'Request access for your department and submit travel applications for review.'}
+            </p>
+
+            <div className="rounded-2xl bg-slate-900 text-white p-6 shadow-lg">
+              <p className="text-xs uppercase tracking-[0.3em] text-emerald-200 font-semibold mb-3">Today</p>
+              <p className="text-2xl font-display">Faster approvals, clearer oversight.</p>
+              <p className="text-sm text-slate-300 mt-3">
+                Centralize applications, track reviews, and keep travel compliant with policy.
+              </p>
+            </div>
+          </section>
+
+          <section className="px-8 py-10 sm:px-12 sm:py-12 bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  {mode === 'login' ? 'Sign in' : 'Create account'}
+                </h2>
+                <p className="text-sm text-slate-500">
+                  {mode === 'login' ? 'Use your staff credentials.' : 'Submit a request for access.'}
+                </p>
+              </div>
+              <span className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                {mode === 'login' ? 'Access' : 'Register'}
+              </span>
+            </div>
 
         {mode === 'login' ? (
           <form className="space-y-4" onSubmit={handleLogin}>
             <label className="block text-sm font-medium text-slate-700">
-              Email
+              Email address
               <input
                 type="email"
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="name@example.nr"
+                placeholder="name@naurugov.nr"
               />
             </label>
             <label className="block text-sm font-medium text-slate-700">
               Password
               <input
                 type="password"
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
@@ -124,7 +162,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
             <div className="flex justify-end">
               <button
                 type="button"
-                className="text-sm text-blue-600 hover:text-blue-800"
+                className="text-sm text-emerald-700 hover:text-emerald-900"
                 onClick={(e) => {
                   e.preventDefault();
                   onForgotPassword();
@@ -136,13 +174,13 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
             <button
               type="submit"
               disabled={busy}
-              className="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-60"
+              className="w-full py-3 bg-emerald-600 text-white font-semibold rounded-2xl hover:bg-emerald-700 transition disabled:opacity-60"
             >
               {busy ? 'Signing in…' : 'Sign In'}
             </button>
             <p className="text-sm text-center text-slate-600">
               No account?{' '}
-              <button type="button" className="text-blue-700 font-semibold" onClick={() => setMode('register')}>
+              <button type="button" className="text-emerald-700 font-semibold" onClick={() => setMode('register')}>
                 Create one
               </button>
             </p>
@@ -150,13 +188,13 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
         ) : (
           <form className="space-y-3" onSubmit={register}>
             <label className="block text-sm font-medium text-slate-700">
-              Email
+              Email address
               <input
                 type="email"
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="name@example.nr"
+                placeholder="name@naurugov.nr"
                 required
               />
             </label>
@@ -164,7 +202,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
               Password
               <input
                 type="password"
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
@@ -174,7 +212,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
             <label className="block text-sm font-medium text-slate-700">
               Full Name
               <input
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
                 placeholder="Your name"
@@ -184,7 +222,7 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
             <label className="block text-sm font-medium text-slate-700">
               Department
               <select
-                className="form-input mt-1 block w-full rounded-md border border-slate-300 px-3 py-2"
+                className="form-input mt-2"
                 value={selectedDepHead}
                 onChange={(event) => setSelectedDepHead(event.target.value)}
                 required
@@ -202,13 +240,13 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
               <button
                 type="submit"
                 disabled={busy}
-                className="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition disabled:opacity-60"
+                className="flex-1 py-3 bg-slate-900 text-white font-semibold rounded-2xl hover:bg-slate-800 transition disabled:opacity-60"
               >
                 {busy ? 'Creating…' : 'Create Account'}
               </button>
               <button
                 type="button"
-                className="flex-1 py-2.5 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50"
+                className="flex-1 py-3 border border-slate-200 text-slate-700 font-semibold rounded-2xl hover:bg-slate-50"
                 onClick={() => setMode('login')}
                 disabled={busy}
               >
@@ -218,7 +256,9 @@ export const AuthModal = ({ onAuthenticated, onForgotPassword }: Props) => {
           </form>
         )}
 
-        {status && <p className="mt-4 text-sm text-center text-rose-600">{status}</p>}
+        {status && <p className="mt-5 text-sm text-center text-rose-600">{status}</p>}
+          </section>
+        </div>
       </div>
     </div>
   );
