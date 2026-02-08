@@ -21,6 +21,9 @@ The script will:
 - ✓ Install backend + frontend dependencies
 - ✓ Verify all lock files are in place
 - ✓ Configure `.env` based on environment
+- ✓ Auto-generate JWT secrets if missing
+- ✓ Auto-generate `POSTGRES_PASSWORD` if missing (shown once)
+- ✓ Default `POSTGRES_USER`/`POSTGRES_DB` to `travel` if placeholders
 - ✓ Build and start Docker services
 
 ### 3. Configure Environment

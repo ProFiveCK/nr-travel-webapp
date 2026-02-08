@@ -179,7 +179,9 @@ generate_secret() {
 
 JWT_SECRET_CURRENT=$(get_env_value JWT_SECRET)
 REFRESH_SECRET_CURRENT=$(get_env_value REFRESH_SECRET)
+POSTGRES_USER_CURRENT=$(get_env_value POSTGRES_USER)
 POSTGRES_PASSWORD_CURRENT=$(get_env_value POSTGRES_PASSWORD)
+POSTGRES_DB_CURRENT=$(get_env_value POSTGRES_DB)
 
 # Auto-generate secrets if missing/placeholder
 if is_placeholder "$JWT_SECRET_CURRENT"; then
@@ -192,6 +194,16 @@ if is_placeholder "$REFRESH_SECRET_CURRENT"; then
   set_env_value REFRESH_SECRET "$NEW_REFRESH_SECRET"
 fi
 
+if is_placeholder "$POSTGRES_USER_CURRENT"; then
+  set_env_value POSTGRES_USER "travel"
+  echo "🧩 Set POSTGRES_USER=travel (default)"
+fi
+
+if is_placeholder "$POSTGRES_DB_CURRENT"; then
+  set_env_value POSTGRES_DB "travel"
+  echo "🧩 Set POSTGRES_DB=travel (default)"
+fi
+
 if is_placeholder "$POSTGRES_PASSWORD_CURRENT"; then
   GENERATED_DB_PASSWORD=$(generate_secret)
   set_env_value POSTGRES_PASSWORD "$GENERATED_DB_PASSWORD"
@@ -200,6 +212,16 @@ if is_placeholder "$POSTGRES_PASSWORD_CURRENT"; then
 fi
 
 if [ "$NO_PROMPT" != "true" ]; then
+  read -r -p "Enter POSTGRES_USER to override (leave blank to keep current): " POSTGRES_USER_INPUT
+  if [ -n "$POSTGRES_USER_INPUT" ]; then
+    set_env_value POSTGRES_USER "$POSTGRES_USER_INPUT"
+  fi
+
+  read -r -p "Enter POSTGRES_DB to override (leave blank to keep current): " POSTGRES_DB_INPUT
+  if [ -n "$POSTGRES_DB_INPUT" ]; then
+    set_env_value POSTGRES_DB "$POSTGRES_DB_INPUT"
+  fi
+
   read -r -p "Enter POSTGRES_PASSWORD to override (leave blank to keep current): " POSTGRES_PASSWORD_INPUT
   if [ -n "$POSTGRES_PASSWORD_INPUT" ]; then
     set_env_value POSTGRES_PASSWORD "$POSTGRES_PASSWORD_INPUT"
