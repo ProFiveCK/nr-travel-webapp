@@ -47,7 +47,9 @@ flowchart TD
 ## Quick Start for Admins
 
 ### Initial Setup
-1. **Bootstrap**: Run `./deploy.sh --env docker --url http://localhost:8090`
+1. **Bootstrap**: Run `./deploy-docker.sh`
+   - To reset the database (destructive): use `./deploy-docker-reset-db.sh`
+   - For CI or non-interactive: add `--no-prompt` to `deploy.sh`
 4. **Access application**: Navigate to `http://localhost:8090`
 5. **Login**: Use default test credentials (see [DEVELOPMENT_CREDENTIALS.md](./DEVELOPMENT_CREDENTIALS.md))
 

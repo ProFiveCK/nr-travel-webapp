@@ -8,11 +8,15 @@ Use the deploy script to install, configure, and start services:
 
 ```bash
 # Local Docker
-./deploy.sh --env docker --url http://localhost:8090
+./deploy-docker.sh
 
 # Production
-./deploy.sh --env production --url https://yourdomain.com
+./deploy-production.sh https://yourdomain.com
 ```
+
+Notes:
+- Use `./deploy-docker-reset-db.sh` to wipe and recreate the DB (destructive)
+- Use `./deploy.sh --no-prompt` for CI/non-interactive runs
 
 ---
 

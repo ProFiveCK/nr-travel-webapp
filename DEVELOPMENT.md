@@ -37,7 +37,7 @@ cd /path/to/NR-travel-webapp
 
 ```bash
 # Recommended: use the deploy script (installs deps, configures .env, starts Docker)
-./deploy.sh --env docker --url http://localhost:8090
+./deploy-docker.sh
 ```
 
 If you prefer manual install:
@@ -158,7 +158,7 @@ For a new machine or server, set `NGINX_PORT` and `SERVER_NAME` in `.env` to con
 ### One-Step Bootstrap (Local or Server)
 
 ```bash
-./deploy.sh --env docker --url http://localhost:8090
+./deploy-docker.sh
 ```
 
 ## Development Workflow

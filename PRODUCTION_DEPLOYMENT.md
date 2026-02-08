@@ -136,7 +136,7 @@ Create [CHANGELOG.md](./CHANGELOG.md) entry:
 
 ```bash
 # Rebuild everything
-./deploy.sh --env production --url https://yourdomain.com
+./deploy-production.sh https://yourdomain.com
 
 # Test in Docker (production mode)
 ./setup-config.sh production https://yourdomain.com

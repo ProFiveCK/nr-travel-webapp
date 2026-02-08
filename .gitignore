@@ -45,6 +45,7 @@ Thumbs.db
 .tmp
 /tmp
 *.tmp
+.deploy-state
 
 # Local deployment guides (personal paths)
 QUICK_DEPLOY_TODAY.md

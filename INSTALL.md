@@ -12,7 +12,7 @@ cd nr-travel-webapp
 
 ### 2. Run the Deploy Script
 ```bash
-./deploy.sh --env docker --url http://localhost:8090
+./deploy-docker.sh
 ```
 
 The script will:
@@ -45,7 +45,7 @@ Key configuration areas:
 For production:
 
 ```bash
-./deploy.sh --env production --url https://yourdomain.com
+./deploy-production.sh https://yourdomain.com
 ```
 
 #### Option B: Local Development

@@ -228,6 +228,10 @@ if [ "$NO_PROMPT" != "true" ]; then
   fi
 fi
 
+POSTGRES_USER_CURRENT=$(get_env_value POSTGRES_USER)
+POSTGRES_PASSWORD_CURRENT=$(get_env_value POSTGRES_PASSWORD)
+POSTGRES_DB_CURRENT=$(get_env_value POSTGRES_DB)
+
 echo ""
 echo "🔒 IMPORTANT: review .env for secrets (JWT_SECRET, REFRESH_SECRET, SMTP, DB password)."
 echo ""
@@ -236,10 +240,42 @@ if [ "$DO_DOWN" = "true" ]; then
   docker compose down
 fi
 
+DEPLOY_STATE_FILE=".deploy-state"
+if [ "$NO_PROMPT" != "true" ]; then
+  PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$PWD")}"
+  DB_VOLUME="${PROJECT_NAME}_pgdata"
+  if docker volume ls -q | grep -q "^${DB_VOLUME}$"; then
+    if [ -f "$DEPLOY_STATE_FILE" ]; then
+      PREV_HASH=$(cat "$DEPLOY_STATE_FILE" 2>/dev/null || true)
+      CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | shasum -a 256 | awk '{print $1}')
+      if [ -n "$PREV_HASH" ] && [ "$PREV_HASH" != "$CURR_HASH" ]; then
+        echo "⚠️  Detected existing DB volume with changed POSTGRES_* credentials."
+        echo "   If you keep the volume, the backend may fail to connect."
+      fi
+    fi
+  fi
+fi
+
+if [ "$NO_PROMPT" != "true" ] && [ "$RESET_DB" != "true" ]; then
+  PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$PWD")}"
+  DB_VOLUME="${PROJECT_NAME}_pgdata"
+  if docker volume ls -q | grep -q "^${DB_VOLUME}$"; then
+    read -r -p "Existing DB volume '${DB_VOLUME}' detected. Reset DB? (y/N): " RESET_INPUT
+    case "$RESET_INPUT" in
+      y|Y)
+        RESET_DB="true"
+        ;;
+    esac
+  fi
+fi
+
 if [ "$RESET_DB" = "true" ]; then
   echo "⚠️  Resetting database volume (destructive)..."
   docker compose down -v
 fi
+
+CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | shasum -a 256 | awk '{print $1}')
+echo "$CURR_HASH" > "$DEPLOY_STATE_FILE"
 
 docker compose up -d --build
 
