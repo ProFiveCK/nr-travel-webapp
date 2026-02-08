@@ -25,6 +25,11 @@ const upload = multer({
 
 router.use(authenticate);
 
+const getParam = (value: string | string[] | undefined): string => {
+  if (Array.isArray(value)) return value[0] ?? '';
+  return value ?? '';
+};
+
 const canAccessApplication = (user: AuthenticatedRequest['user'], applicationRequesterId: string) => {
   if (!user) return false;
   return (
@@ -64,7 +69,7 @@ router.get('/expense-types', authenticate, async (_req, res) => {
 });
 
 router.get('/:id', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   console.log(`[DEBUG] Hit GET /:id with id=${id}`);
   try {
     const application = await applicationService.findById(id);
@@ -297,7 +302,7 @@ router.post('/', async (req: AuthenticatedRequest, res) => {
 });
 
 router.post('/:id/submit', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const application = await applicationService.findById(id);
   if (!application || application.requesterId !== req.user?.id) {
     return res.status(404).json({ message: 'Application not found' });
@@ -384,7 +389,7 @@ router.post('/:id/submit', async (req: AuthenticatedRequest, res) => {
 });
 
 router.get('/:id/attachments', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const application = await applicationService.findById(id);
   if (!application || !canAccessApplication(req.user, application.requesterId)) {
     return res.status(404).json({ message: 'Application not found' });
@@ -404,7 +409,7 @@ router.get('/:id/attachments', async (req: AuthenticatedRequest, res) => {
 
 router.post('/:id/attachments', upload.single('file'), async (req: AuthenticatedRequest, res) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
     const application = await applicationService.findById(id);
     if (!application || !canAccessApplication(req.user, application.requesterId)) {
       return res.status(404).json({ message: 'Application not found' });
@@ -471,7 +476,7 @@ router.post('/:id/attachments', upload.single('file'), async (req: Authenticated
 });
 
 router.post('/:id/resubmit', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const application = await applicationService.findById(id);
 
   if (!application || application.requesterId !== req.user?.id) {

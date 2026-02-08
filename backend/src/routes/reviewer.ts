@@ -11,6 +11,11 @@ import type { TravelApplication } from '../types.js';
 const router = Router();
 router.use(authenticate, requireRole(['REVIEWER', 'ADMIN']));
 
+const getParam = (value: string | string[] | undefined): string => {
+  if (Array.isArray(value)) return value[0] ?? '';
+  return value ?? '';
+};
+
 router.get('/queue', async (req: AuthenticatedRequest, res) => {
   const submitted = await applicationService.findByStatus('SUBMITTED');
   const inReview = await applicationService.findByStatus('IN_REVIEW');
@@ -31,7 +36,7 @@ router.get('/archived', async (req: AuthenticatedRequest, res) => {
 
 // When reviewer opens an application, mark it as IN_REVIEW
 router.get('/:id', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const app = await applicationService.findById(id);
   if (!app) {
     return res.status(404).json({ message: 'Application not found' });
@@ -51,7 +56,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res) => {
 });
 
 router.post('/:id/decision', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const { action, note } = req.body;
   const allowed = ['APPROVED', 'REJECTED', 'REQUEST_INFO', 'REFERRED_TO_MINISTER'];
   if (!allowed.includes(action)) {

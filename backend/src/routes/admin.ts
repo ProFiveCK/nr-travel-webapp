@@ -13,6 +13,11 @@ import type { DepartmentProfile, SystemSettings } from '../types.js';
 const router = Router();
 router.use(authenticate, requireRole(['ADMIN']));
 
+const getParam = (value: string | string[] | undefined): string => {
+  if (Array.isArray(value)) return value[0] ?? '';
+  return value ?? '';
+};
+
 router.get('/signup-requests', async (_req, res) => {
   const requests = await signupRequestService.findAll();
   return res.json({ requests });
@@ -75,7 +80,7 @@ router.get('/users/archived', async (_req, res) => {
 });
 
 router.post('/users/:id/disable', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const adminId = req.user?.email || req.user?.id || 'unknown';
 
   try {
@@ -90,7 +95,7 @@ router.post('/users/:id/disable', async (req: AuthenticatedRequest, res) => {
 });
 
 router.post('/users/:id/restore', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
 
   try {
     const user = await userService.restore(id);
@@ -104,7 +109,7 @@ router.post('/users/:id/restore', async (req: AuthenticatedRequest, res) => {
 });
 
 router.post('/signup-requests/:id/approve', async (req, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const { tempPassword } = req.body;
 
   const request = await signupRequestService.findById(id);
@@ -180,7 +185,7 @@ router.post('/signup-requests/:id/approve', async (req, res) => {
 });
 
 router.post('/users/:id/role', async (req, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const { role } = req.body;
 
   if (!['USER', 'REVIEWER', 'ADMIN', 'MINISTER'].includes(role)) {
@@ -199,7 +204,7 @@ router.post('/users/:id/role', async (req, res) => {
 });
 
 router.put('/users/:id', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const { firstName, lastName, roles, resetPassword, newPassword, forceChangeOnLogin } = req.body;
 
   try {
@@ -249,7 +254,7 @@ router.put('/users/:id', async (req: AuthenticatedRequest, res) => {
 });
 
 router.post('/users/:id/reset-password', async (req, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   const { newPassword, forceChangeOnLogin } = req.body;
 
   try {
@@ -281,7 +286,7 @@ router.post('/users/:id/reset-password', async (req, res) => {
 });
 
 router.delete('/users/:id', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
 
   try {
     const user = await userService.findById(id);
@@ -307,7 +312,7 @@ router.get('/department-profiles', async (_req, res) => {
 });
 
 router.get('/department-profiles/:code', async (req, res) => {
-  const { code } = req.params;
+  const code = getParam(req.params.code);
   const profile = await departmentProfileService.findByCode(code);
   if (!profile) {
     return res.status(404).json({ message: 'Department profile not found' });
@@ -387,7 +392,7 @@ router.post('/department-profiles', async (req: AuthenticatedRequest, res) => {
 });
 
 router.put('/department-profiles/:code', async (req: AuthenticatedRequest, res) => {
-  const { code } = req.params;
+  const code = getParam(req.params.code);
   const { deptName, headName, headEmail, secretaryName, secretaryEmail } = req.body;
 
   const userId = req.user?.email || req.user?.id || 'unknown';
@@ -425,7 +430,7 @@ router.put('/department-profiles/:code', async (req: AuthenticatedRequest, res) 
 });
 
 router.delete('/department-profiles/:code', async (req, res) => {
-  const { code } = req.params;
+  const code = getParam(req.params.code);
 
   try {
     await departmentProfileService.delete(code);
@@ -462,7 +467,7 @@ router.post('/departments', async (req: AuthenticatedRequest, res) => {
 });
 
 router.put('/departments/:code', async (req, res) => {
-  const { code } = req.params;
+  const code = getParam(req.params.code);
   const { deptName } = req.body;
   if (!deptName) {
     return res.status(400).json({ message: 'Department name is required' });
@@ -480,7 +485,7 @@ router.put('/departments/:code', async (req, res) => {
 });
 
 router.delete('/departments/:code', async (req, res) => {
-  const { code } = req.params;
+  const code = getParam(req.params.code);
 
   try {
     await departmentService.delete(code);
@@ -561,7 +566,7 @@ router.post('/settings/test-email', async (req, res) => {
 
 // Delete application (admin only)
 router.delete('/applications/:id', async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
+  const id = getParam(req.params.id);
   try {
     const app = await applicationService.findById(id);
     if (!app) {

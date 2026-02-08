@@ -10,6 +10,11 @@ import type { TravelApplication } from '../types.js';
 const router = Router();
 router.use(authenticate, requireRole(['MINISTER', 'ADMIN']));
 
+const getParam = (value: string | string[] | undefined): string => {
+  if (Array.isArray(value)) return value[0] ?? '';
+  return value ?? '';
+};
+
 // Get applications pending minister approval
 router.get('/queue', async (req: AuthenticatedRequest, res) => {
     const pending = await applicationService.findByStatus('PENDING_MINISTER_APPROVAL');
@@ -30,7 +35,7 @@ router.get('/archived', async (req: AuthenticatedRequest, res) => {
 
 // Minister decision on an application
 router.post('/:id/decision', async (req: AuthenticatedRequest, res) => {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
     const { action, note } = req.body;
     const allowed = ['MINISTER_APPROVED', 'MINISTER_REJECTED'];
 
