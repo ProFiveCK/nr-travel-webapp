@@ -155,7 +155,11 @@ set_env_value() {
   local key="$1"
   local value="$2"
   if grep -qE "^${key}=" .env; then
-    sed -i '' "s#^${key}=.*#${key}=${value}#g" .env
+    if [ "$(uname -s)" = "Darwin" ]; then
+      sed -i '' "s#^${key}=.*#${key}=${value}#g" .env
+    else
+      sed -i "s#^${key}=.*#${key}=${value}#g" .env
+    fi
   else
     echo "${key}=${value}" >> .env
   fi
