@@ -27,8 +27,9 @@ install_node() {
       curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
       sudo apt-get install -y nodejs
     elif command -v dnf &>/dev/null; then
-      # Fedora/RHEL/Rocky
-      sudo dnf module install -y nodejs:20/common
+      # Fedora/RHEL/Rocky/AlmaLinux — use NodeSource RPM repo
+      curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+      sudo dnf install -y nodejs
     elif command -v yum &>/dev/null; then
       curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
       sudo yum install -y nodejs
