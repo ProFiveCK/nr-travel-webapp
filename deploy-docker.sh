@@ -5,6 +5,49 @@ set -euo pipefail
 
 OS="$(uname -s)"
 
+# Returns true if running inside WSL (any version)
+is_wsl() {
+  grep -qiE "microsoft|wsl" /proc/version 2>/dev/null
+}
+
+# Returns "2", "1", or "unknown"
+wsl_version() {
+  if grep -qi "WSL2" /proc/version 2>/dev/null; then
+    echo "2"
+  elif grep -qiE "microsoft|wsl" /proc/version 2>/dev/null; then
+    echo "1"
+  else
+    echo "unknown"
+  fi
+}
+
+# Start Docker daemon in a WSL-aware way (systemd may not be available)
+start_docker_daemon() {
+  if is_wsl; then
+    # WSL2: try Docker Desktop socket first, then fallback to service/dockerd
+    if [ -S /var/run/docker.sock ] && docker info &>/dev/null 2>&1; then
+      return 0
+    fi
+    if command -v service &>/dev/null; then
+      echo "  Starting Docker service (WSL)..."
+      sudo service docker start || true
+      sleep 3
+    else
+      echo "  Starting dockerd directly (WSL)..."
+      sudo dockerd &>/dev/null &
+      sleep 5
+    fi
+  elif command -v systemctl &>/dev/null && systemctl is-system-running &>/dev/null 2>&1; then
+    echo "  Starting Docker daemon..."
+    sudo systemctl start docker
+    sleep 3
+  elif command -v service &>/dev/null; then
+    echo "  Starting Docker service..."
+    sudo service docker start || true
+    sleep 3
+  fi
+}
+
 ensure_brew() {
   if ! command -v brew &>/dev/null; then
     echo "  Homebrew not found. Installing Homebrew..."
@@ -16,14 +59,33 @@ ensure_brew() {
   fi
 }
 
+# Ensure curl is present (required for all auto-installs)
+ensure_curl() {
+  if ! command -v curl &>/dev/null; then
+    echo "  curl not found — installing..."
+    if command -v apt-get &>/dev/null; then
+      sudo apt-get install -y curl
+    elif command -v dnf &>/dev/null; then
+      sudo dnf install -y curl
+    elif command -v yum &>/dev/null; then
+      sudo yum install -y curl
+    else
+      echo "ERROR: curl is required but could not be installed automatically."
+      echo "  Please install curl and re-run this script."
+      exit 1
+    fi
+  fi
+}
+
 install_node() {
   echo "📦 Node.js not found — attempting auto-install..."
   if [ "$OS" = "Darwin" ]; then
     ensure_brew
     brew install node
   elif [ "$OS" = "Linux" ]; then
+    ensure_curl
     if command -v apt-get &>/dev/null; then
-      # Debian/Ubuntu: install Node.js 20 LTS via NodeSource
+      # Debian/Ubuntu/WSL-Ubuntu: install Node.js 20 LTS via NodeSource
       curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
       sudo apt-get install -y nodejs
     elif command -v dnf &>/dev/null; then
@@ -54,13 +116,36 @@ install_docker() {
     echo "  then press Enter to continue..."
     read -r
   elif [ "$OS" = "Linux" ]; then
+    ensure_curl
+    if is_wsl; then
+      WSL_VER=$(wsl_version)
+      if [ "$WSL_VER" = "1" ]; then
+        echo ""
+        echo "ERROR: WSL1 does not support Docker Engine natively."
+        echo "  Option 1 (recommended): Upgrade to WSL2 — run in PowerShell:"
+        echo "    wsl --set-version <YourDistroName> 2"
+        echo "  Option 2: Install Docker Desktop for Windows with WSL2 integration:"
+        echo "    https://docs.docker.com/desktop/windows/wsl/"
+        exit 1
+      fi
+      echo "  WSL2 detected."
+      echo "  Tip: If Docker Desktop for Windows is installed, enable WSL2 integration"
+      echo "  in Docker Desktop settings for the best experience."
+      echo "  Proceeding with Docker Engine install inside WSL2..."
+    fi
     if command -v apt-get &>/dev/null || command -v yum &>/dev/null || command -v dnf &>/dev/null; then
       curl -fsSL https://get.docker.com | sudo sh
       sudo usermod -aG docker "$USER" || true
-      sudo systemctl enable --now docker
+      # Start service — WSL may not have systemd
+      if is_wsl; then
+        sudo service docker start || true
+      elif command -v systemctl &>/dev/null && systemctl is-system-running &>/dev/null 2>&1; then
+        sudo systemctl enable --now docker
+      else
+        sudo service docker start || true
+      fi
       echo "  Docker installed and service started."
       echo "  NOTE: You may need to log out and back in for group membership to take effect."
-      echo "        To avoid this now, subsequent docker commands will use sudo if needed."
     else
       echo "ERROR: Unsupported Linux package manager. Install Docker manually: https://docs.docker.com/engine/install/"
       exit 1
@@ -100,6 +185,22 @@ install_docker_compose() {
 echo "🔧 Checking prerequisites..."
 echo ""
 
+# WSL version gate
+if [ "$OS" = "Linux" ] && is_wsl; then
+  WSL_VER=$(wsl_version)
+  echo "ℹ️  Running inside WSL${WSL_VER}"
+  if [ "$WSL_VER" = "1" ]; then
+    echo "ERROR: WSL1 is not supported. Please upgrade to WSL2:"
+    echo "  wsl --set-version <YourDistroName> 2"
+    exit 1
+  fi
+  echo ""
+fi
+
+# curl (must come before any other auto-install)
+ensure_curl
+echo "✓ curl $(curl --version | head -1 | awk '{print $2}')"
+
 # Node.js
 if ! command -v node &>/dev/null; then
   install_node
@@ -127,12 +228,22 @@ if ! docker info &>/dev/null 2>&1; then
     echo "  Please open Docker Desktop and wait for it to start, then press Enter to continue..."
     read -r
   elif [ "$OS" = "Linux" ]; then
-    echo "  Attempting to start Docker daemon..."
-    sudo systemctl start docker
-    sleep 3
+    if is_wsl && [ "$(wsl_version)" = "1" ]; then
+      echo "ERROR: WSL1 does not support Docker. Upgrade to WSL2 or use Docker Desktop."
+      exit 1
+    fi
+    start_docker_daemon
   fi
   if ! docker info &>/dev/null 2>&1; then
-    echo "ERROR: Docker daemon still not reachable. Start Docker and re-run this script."
+    if is_wsl; then
+      echo ""
+      echo "ERROR: Docker daemon is not reachable in WSL."
+      echo "  If you have Docker Desktop for Windows, enable WSL2 integration:"
+      echo "    Docker Desktop → Settings → Resources → WSL Integration"
+      echo "  Otherwise ensure the Docker service started: sudo service docker status"
+    else
+      echo "ERROR: Docker daemon still not reachable. Start Docker and re-run this script."
+    fi
     exit 1
   fi
 fi
