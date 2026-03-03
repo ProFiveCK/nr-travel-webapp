@@ -46,17 +46,74 @@ flowchart TD
 
 ## Quick Start for Admins
 
-### Initial Setup
-1. **Bootstrap**: Run `./deploy-docker.sh`
-   - To reset the database (destructive): use `./deploy-docker-reset-db.sh`
-   - For CI or non-interactive: add `--no-prompt` to `deploy.sh`
-4. **Access application**: Navigate to `http://localhost:8090`
-5. **Login**: Use default test credentials (see [DEVELOPMENT_CREDENTIALS.md](./DEVELOPMENT_CREDENTIALS.md))
+### Requirements
+Only **Git** is required upfront. Node.js, npm, and Docker are automatically installed by the deploy script if missing.
+
+> **Windows users:** Run all commands inside **WSL2** (Windows Subsystem for Linux). WSL1 is not supported.
+
+---
+
+### Fresh Install
+
+**1. Install Git** (skip if already installed)
+
+| OS | Command |
+|---|---|
+| Ubuntu / Debian / WSL | `sudo apt-get install -y git` |
+| Fedora / RHEL / Rocky | `sudo dnf install -y git` |
+| macOS | `xcode-select --install` |
+
+Verify: `git --version`
+
+**2. Clone the repository**
+```bash
+git clone https://github.com/ProFiveCK/nr-travel-webapp.git
+cd nr-travel-webapp
+```
+
+**3. Make the deploy script executable**
+```bash
+chmod +x deploy-docker.sh
+```
+
+**4. (Optional) Change the default port**
+
+The app runs on port `8090` by default. To use a different port:
+```bash
+echo "NGINX_PORT=9000" > .env
+```
+
+**5. Run the deploy script**
+```bash
+./deploy-docker.sh
+```
+
+This automatically installs any missing prerequisites, builds images, and starts all services.
+
+**6. Access the application**
+
+Open `http://localhost:8090` (or your custom port) in your browser.  
+Default login credentials: see [DEVELOPMENT_CREDENTIALS.md](./DEVELOPMENT_CREDENTIALS.md)
+
+---
+
+### Updating an Existing Install
+
+```bash
+git pull
+./deploy-docker.sh
+```
+
+### Reset the Database (destructive)
+
+```bash
+./deploy-docker-reset-db.sh
+```
 
 ### Configuration
-- Use the **Settings** tab to configure LDAP, email, and upload settings
-- Manage departments via **Department Profiles** in the admin UI
-- See [.env.example](./.env.example) for all configuration options
+- Edit `.env` to change port, database credentials, SMTP settings, etc.
+- See [.env.example](./.env.example) for all available options
+- Use the **Settings** tab in the admin UI to configure LDAP, email, and uploads
 
 ---
 

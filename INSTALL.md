@@ -1,105 +1,140 @@
 # Installation Guide
 
-Quick setup for NR Travel Webapp using the automated deploy script.
+> **Windows users:** Run all commands inside **WSL2** (Windows Subsystem for Linux). WSL1 is not supported.
 
-## Quick Start (Recommended)
+---
 
-### 1. Clone the Repository
+## Quick Start
+
+### 1. Install Git
+
+Git is the only prerequisite you need to install manually. Node.js, npm, and Docker are installed automatically by the deploy script if they are missing.
+
+| OS | Command |
+|---|---|
+| Ubuntu / Debian / WSL | `sudo apt-get install -y git` |
+| Fedora / RHEL / Rocky | `sudo dnf install -y git` |
+| macOS | `xcode-select --install` |
+
+Verify: `git --version`
+
+### 2. Clone the Repository
 ```bash
-git clone https://github.com/your-org/nr-travel-webapp.git
+git clone https://github.com/ProFiveCK/nr-travel-webapp.git
 cd nr-travel-webapp
 ```
 
-### 2. Run the Deploy Script
+### 3. Make the Deploy Script Executable
+```bash
+chmod +x deploy-docker.sh
+```
+
+### 4. (Optional) Change the Default Port
+
+The app defaults to port `8090`. To use a different port before first run:
+```bash
+echo "NGINX_PORT=9000" > .env
+```
+
+### 5. Run the Deploy Script
 ```bash
 ./deploy-docker.sh
 ```
 
-The script will:
-- ✓ Verify Node.js and npm are installed
-- ✓ Create `.env` file (if missing)
+The script will automatically:
+- ✓ Install Node.js, npm, Docker, and Docker Compose if missing
+- ✓ Create `.env` from template if missing
 - ✓ Install backend + frontend dependencies
-- ✓ Verify all lock files are in place
-- ✓ Configure `.env` based on environment
-- ✓ Auto-generate JWT secrets if missing
-- ✓ Auto-generate `POSTGRES_PASSWORD` if missing (shown once)
-- ✓ Default `POSTGRES_USER`/`POSTGRES_DB` to `travel` if placeholders
-- ✓ Build and start Docker services
+- ✓ Auto-generate JWT secrets and database password if missing
+- ✓ Build and start all Docker services
 
-### 3. Configure Environment
-Edit the `.env` file with your deployment-specific settings:
+### 6. Access the Application
+
+Open `http://localhost:8090` (or your custom port) in your browser.  
+See [DEVELOPMENT_CREDENTIALS.md](./DEVELOPMENT_CREDENTIALS.md) for default login credentials.
+
+---
+
+## Updating an Existing Install
+
+```bash
+cd nr-travel-webapp
+git pull
+./deploy-docker.sh
+```
+
+## Reset the Database (destructive)
+
+```bash
+./deploy-docker-reset-db.sh
+```
+
+---
+
+## Configure Environment
+
+Edit `.env` for deployment-specific settings:
 ```bash
 nano .env
-# or your preferred editor
 ```
 
-Key configuration areas:
-- **Secrets**: `JWT_SECRET`, `REFRESH_SECRET` (change these!)
-- **Database**: PostgreSQL connection details
+Key options:
+- **Port**: `NGINX_PORT` (default: `8090`)
+- **Secrets**: `JWT_SECRET`, `REFRESH_SECRET` — change in production!
+- **Database**: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
 - **URLs**: `CLIENT_URL`, `API_URL`, `PUBLIC_URL`
-- **Email**: SMTP configuration for notifications
-- **Storage**: `UPLOADS_DIR` path
+- **Email**: `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`
+- **Storage**: `UPLOADS_DIR`
 
-### 4. Start the Application
+See [.env.example](./.env.example) for all available options.
 
-For production:
-
-```bash
-./deploy-production.sh https://yourdomain.com
-```
-
-#### Option B: Local Development
-See [DEVELOPMENT.md](./DEVELOPMENT.md) for running locally
+---
 
 ## Manual Installation (if script fails)
 
-If the deploy script encounters issues:
-
 ```bash
-# Install backend dependencies
-cd backend
-npm install
-cd ..
+# Install dependencies
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
 
-# Install frontend dependencies
-cd frontend
-npm install
-cd ..
+# Start services
+docker compose up -d --build
 ```
+
+---
 
 ## Troubleshooting
 
-### "Node.js is not installed"
-- Install Node.js v18+: https://nodejs.org/
-- Verify installation: `node --version`
+### "permission denied" running the script
+```bash
+chmod +x deploy-docker.sh
+```
 
-### "npm ci" fails in Docker
-- Lock files are required. The deploy script creates them.
-- Check that `backend/package-lock.json` and `frontend/package-lock.json` exist
+### Port already in use
+Set a different port in `.env`:
+```bash
+echo "NGINX_PORT=9000" >> .env
+```
+Then re-run `./deploy-docker.sh`.
+
+### Docker daemon not running (Linux)
+```bash
+sudo service docker start
+```
+
+### Docker not reachable in WSL2
+In Docker Desktop → Settings → Resources → WSL Integration, enable your distro.
 
 ### "Cannot find module" errors
-- Run the deploy script again: `./deploy.sh --env docker --url http://localhost:8090`
-- Or manually run `npm install` in each directory
+```bash
+npm install   # run inside backend/ and frontend/
+```
 
-## Requirements Met
-
-✓ **Single command setup**: `./deploy.sh`  
-✓ **Automatic .env creation**: Creates from template if missing  
-✓ **Reproducible builds**: Lock files ensure consistent dependencies  
-✓ **Long-term sustainability**: Easy for new team members  
-✓ **Error checking**: Validates prerequisites and installation  
+---
 
 ## Next Steps
 
 - **Development**: See [DEVELOPMENT.md](./DEVELOPMENT.md)
-- **Production**: See [PRODUCTION.md](./PRODUCTION.md)
-- **Docker**: See [docker-compose.yml](./docker-compose.yml)
+- **Production**: See [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md)
 - **Git Workflow**: See [GIT_WORKFLOW.md](./GIT_WORKFLOW.md)
-
-## Support
-
-If you encounter any issues:
-1. Check the error message from the deploy script
-2. Review the relevant documentation file
-3. Ensure all prerequisites are installed
-4. Try running `./deploy.sh --env docker --url http://localhost:8090` again
+- **All config options**: See [.env.example](./.env.example)
