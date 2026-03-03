@@ -23,6 +23,9 @@ get_env() {
 
 echo "🔧 Setting up configuration for: $ENVIRONMENT"
 
+# Read NGINX_PORT early so docker/development modes can use it
+NGINX_PORT=$(get_env NGINX_PORT "8090")
+
 # Determine URLs based on environment
 case $ENVIRONMENT in
   development)
@@ -30,7 +33,7 @@ case $ENVIRONMENT in
     CLIENT_URL="http://localhost:5173"
     API_URL="http://localhost:4000"
     VITE_API_URL="http://localhost:4000"
-    PUBLIC_URL="http://localhost:8090"
+    PUBLIC_URL="http://localhost:${NGINX_PORT}"
     echo "📝 Development mode:"
     echo "   Frontend: $CLIENT_URL (Vite dev server)"
     echo "   Backend: $API_URL (direct)"
@@ -38,10 +41,10 @@ case $ENVIRONMENT in
     ;;
   docker)
     NODE_ENV="production"
-    CLIENT_URL="http://localhost:8090"
-    API_URL="http://localhost:8090"
+    CLIENT_URL="http://localhost:${NGINX_PORT}"
+    API_URL="http://localhost:${NGINX_PORT}"
     VITE_API_URL="/api"  # Relative path (served from nginx)
-    PUBLIC_URL="http://localhost:8090"
+    PUBLIC_URL="http://localhost:${NGINX_PORT}"
     echo "📝 Docker mode:"
     echo "   Frontend: Served via nginx"
     echo "   Backend: http://backend:4000 (internal)"

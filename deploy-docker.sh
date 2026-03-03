@@ -263,4 +263,13 @@ echo ""
 
 # ── Deploy ────────────────────────────────────────────────────────────────────
 
-./deploy.sh --env docker --url http://localhost:8090
+# Respect NGINX_PORT from .env if already set, otherwise default to 8090
+NGINX_PORT=8090
+if [ -f .env ]; then
+  _PORT=$(grep -E '^NGINX_PORT=' .env | tail -n1 | cut -d'=' -f2-)
+  if [ -n "$_PORT" ]; then
+    NGINX_PORT="$_PORT"
+  fi
+fi
+
+./deploy.sh --env docker --url "http://localhost:${NGINX_PORT}"
