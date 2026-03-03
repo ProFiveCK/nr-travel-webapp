@@ -181,6 +181,14 @@ generate_secret() {
   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 }
 
+sha256_hash() {
+  if command -v sha256sum &>/dev/null; then
+    sha256sum | awk '{print $1}'
+  else
+    shasum -a 256 | awk '{print $1}'
+  fi
+}
+
 JWT_SECRET_CURRENT=$(get_env_value JWT_SECRET)
 REFRESH_SECRET_CURRENT=$(get_env_value REFRESH_SECRET)
 POSTGRES_USER_CURRENT=$(get_env_value POSTGRES_USER)
@@ -251,7 +259,7 @@ if [ "$NO_PROMPT" != "true" ]; then
   if docker volume ls -q | grep -q "^${DB_VOLUME}$"; then
     if [ -f "$DEPLOY_STATE_FILE" ]; then
       PREV_HASH=$(cat "$DEPLOY_STATE_FILE" 2>/dev/null || true)
-      CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | shasum -a 256 | awk '{print $1}')
+      CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | sha256_hash)
       if [ -n "$PREV_HASH" ] && [ "$PREV_HASH" != "$CURR_HASH" ]; then
         echo "⚠️  Detected existing DB volume with changed POSTGRES_* credentials."
         echo "   If you keep the volume, the backend may fail to connect."
@@ -278,7 +286,7 @@ if [ "$RESET_DB" = "true" ]; then
   docker compose down -v
 fi
 
-CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | shasum -a 256 | awk '{print $1}')
+CURR_HASH=$(printf "%s" "${POSTGRES_USER_CURRENT}:${POSTGRES_DB_CURRENT}:${POSTGRES_PASSWORD_CURRENT}" | sha256_hash)
 echo "$CURR_HASH" > "$DEPLOY_STATE_FILE"
 
 docker compose up -d --build
